@@ -13,6 +13,10 @@ app.secret_key = 'samaj-seva-secret-key-2024'
 def home():
     return redirect('/dashboard')
 
+@app.route('/ads.txt')
+def ads_txt():
+    return send_from_directory('.', 'ads.txt')
+
 
 # ---------- CONFIG ----------
 UPLOAD_FOLDER = 'static/uploads'
