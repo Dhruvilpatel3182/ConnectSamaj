@@ -1,399 +1,150 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="add-event-container">
-    <h2 class="add-event-title">Add New Event / નવી ઇવેન્ટ ઉમેરો</h2>
+<div class="container-fluid py-4 add-event-page">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4 p-md-5">
+          <h2 class="text-center mb-4 fw-bold text-gradient">
+            Add New Event / નવી ઇવેન્ટ ઉમેરો
+          </h2>
 
-    <div class="add-event-card">
-        <form method="POST" action="{{ url_for('add_event') }}" class="event-form" enctype="multipart/form-data">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="event_type" class="form-label">Event Type / ઇવેન્ટ પ્રકાર *</label>
-                    <select name="event_type" id="event_type" class="form-select" required>
-                        <option value="">Select Event Type / પ્રકાર પસંદ કરો</option>
-                        <option value="Marriage">Marriage / લગ્ન</option>
-                        <option value="Festival">Festival / તહેવાર</option>
-                        <option value="Meeting">Meeting / બેઠક</option>
-                        <option value="Celebration">Celebration / ઉજવણી</option>
-                        <option value="Sports">Sports / રમતગમત</option>
-                        <option value="Cultural">Cultural / સાંસ્કૃતિક</option>
-                        <option value="Religious">Religious / ધાર્મિક</option>
-                        <option value="Other">Other / અન્ય</option>
-                    </select>
-                </div>
+          <form method="POST" action="{{ url_for('add_event') }}" enctype="multipart/form-data" id="eventForm">
+            <div class="row g-3">
+              
+              <div class="col-md-6">
+                <label for="event_type" class="form-label fw-semibold">Event Type / ઇવેન્ટ પ્રકાર *</label>
+                <select name="event_type" id="event_type" class="form-select" required>
+                  <option value="">Select Event Type / પ્રકાર પસંદ કરો</option>
+                  <option value="Marriage">Marriage / લગ્ન</option>
+                  <option value="Festival">Festival / તહેવાર</option>
+                  <option value="Meeting">Meeting / બેઠક</option>
+                  <option value="Celebration">Celebration / ઉજવણી</option>
+                  <option value="Sports">Sports / રમતગમત</option>
+                  <option value="Cultural">Cultural / સાંસ્કૃતિક</option>
+                  <option value="Religious">Religious / ધાર્મિક</option>
+                  <option value="Other">Other / અન્ય</option>
+                </select>
+              </div>
 
-                <div class="form-group">
-                    <label for="event_name" class="form-label">Event Name / ઇવેન્ટ નામ *</label>
-                    <input type="text" name="event_name" id="event_name" class="form-input" 
-                           placeholder="Enter event name / ઇવેન્ટ નામ દાખલ કરો" required>
-                </div>
+              <div class="col-md-6">
+                <label for="event_name" class="form-label fw-semibold">Event Name / ઇવેન્ટ નામ *</label>
+                <input type="text" name="event_name" id="event_name" class="form-control"
+                  placeholder="Enter event name / ઇવેન્ટ નામ દાખલ કરો" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="village" class="form-label fw-semibold">Village / ગામ *</label>
+                <select name="village" id="village" class="form-select" required>
+                  <option value="">Select Village / ગામ પસંદ કરો</option>
+                  {% for village in villages %}
+                  <option value="{{ village }}">{{ village }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="date" class="form-label fw-semibold">Date / તારીખ *</label>
+                <input type="date" name="date" id="date" class="form-control" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="time" class="form-label fw-semibold">Time / સમય</label>
+                <input type="time" name="time" id="time" class="form-control">
+              </div>
+
+              <div class="col-12">
+                <label for="description" class="form-label fw-semibold">Description / વર્ણન</label>
+                <textarea name="description" id="description" rows="4" class="form-control"
+                  placeholder="Enter event description / ઇવેન્ટ વર્ણન દાખલ કરો"></textarea>
+              </div>
+
+              <div class="col-12 d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+                <button type="submit" class="btn btn-success px-4 py-2 fw-semibold">Add Event / ઇવેન્ટ ઉમેરો</button>
+                <a href="{{ url_for('view_events') }}" class="btn btn-secondary px-4 py-2 fw-semibold">Cancel / રદ કરો</a>
+              </div>
             </div>
+          </form>
+        </div>
+      </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="village" class="form-label">Village / ગામ *</label>
-                    <select name="village" id="village" class="form-select" required>
-                        <option value="">Select Village / ગામ પસંદ કરો</option>
-                        {% for village in villages %}
-                        <option value="{{ village }}">{{ village }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="date" class="form-label">Date / તારીખ *</label>
-                    <input type="date" name="date" id="date" class="form-input" required>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="time" class="form-label">Time / સમય</label>
-                    <input type="time" name="time" id="time" class="form-input" 
-                           placeholder="HH:MM">
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="description" class="form-label">Description / વર્ણન</label>
-                    <textarea name="description" id="description" class="form-textarea" 
-                              placeholder="Enter event description / ઇવેન્ટ વર્ણન દાખલ કરો" 
-                              rows="4"></textarea>
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn submit-btn">Add Event / ઇવેન્ટ ઉમેરો</button>
-                <a href="{{ url_for('view_events') }}" class="btn cancel-btn">Cancel / રદ કરો</a>
-            </div>
-        </form>
-    </div>
-
-    <div class="form-guide">
-        <h4>📝 Event Guidelines / ઇવેન્ટ માર્ગદર્શિકા:</h4>
-        <ul>
+      <div class="card mt-4 border-0 shadow-sm rounded-4">
+        <div class="card-body">
+          <h5 class="fw-bold mb-3 text-dark">📝 Event Guidelines / ઇવેન્ટ માર્ગદર્શિકા</h5>
+          <ul class="text-muted small mb-0">
             <li>Fill all required fields marked with * / * ચિહ્નિત ફીલ્ડ્સ ભરો</li>
             <li>Select appropriate event type for better categorization / સારી કેટેગરાઇઝેશન માટે યોગ્ય પ્રકાર પસંદ કરો</li>
             <li>Provide clear description for event details / ઇવેન્ટ વિગતો માટે સ્પષ્ટ વર્ણન આપો</li>
-        </ul>
+          </ul>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <style>
-/* Base Styles */
-.add-event-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 30px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
+.text-gradient {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.add-event-title {
-    color: white;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+.add-event-page {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
 }
 
-/* Add Event Card */
-.add-event-card {
-    background: white;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    backdrop-filter: blur(10px);
+.card {
+  border-radius: 18px !important;
 }
 
-/* Form Styles */
-.event-form {
+.form-control, .form-select {
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-size: 15px;
+  border: 1.8px solid #e1e5eb;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #5b73e8;
+  box-shadow: 0 0 0 3px rgba(91, 115, 232, 0.15);
+}
+
+.btn-success {
+  background: linear-gradient(45deg, #27ae60, #219653);
+  border: none;
+}
+
+.btn-secondary {
+  background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+  border: none;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  h2 {
+    font-size: 1.6rem;
+  }
+  .card-body {
+    padding: 1.5rem !important;
+  }
+  .form-control, .form-select {
+    font-size: 14px;
+  }
+  .btn {
     width: 100%;
-}
-
-.form-row {
-    display: flex;
-    gap: 25px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-}
-
-.form-group {
-    flex: 1;
-    min-width: 250px;
-}
-
-.form-group.full-width {
-    flex: 100%;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 15px;
-}
-
-.form-label::after {
-    content: " *";
-    color: #e74c3c;
-}
-
-.form-input,
-.form-select,
-.form-textarea {
-    width: 100%;
-    padding: 15px 20px;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    background: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-    transform: translateY(-2px);
-}
-
-.form-input::placeholder,
-.form-textarea::placeholder {
-    color: #95a5a6;
-}
-
-.form-textarea {
-    resize: vertical;
-    min-height: 120px;
-}
-
-/* Form Actions */
-.form-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 35px;
-    flex-wrap: wrap;
-}
-
-.btn {
-    display: inline-block;
-    padding: 15px 35px;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    min-width: 160px;
-}
-
-.submit-btn {
-    background: linear-gradient(45deg, #27ae60, #219653);
-    color: white;
-    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
-}
-
-.submit-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
-    background: linear-gradient(45deg, #219653, #1e8449);
-}
-
-.cancel-btn {
-    background: linear-gradient(45deg, #95a5a6, #7f8c8d);
-    color: white;
-    box-shadow: 0 5px 15px rgba(149, 165, 166, 0.3);
-}
-
-.cancel-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(149, 165, 166, 0.4);
-    background: linear-gradient(45deg, #7f8c8d, #6c7a7d);
-}
-
-/* Form Guide */
-.form-guide {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    backdrop-filter: blur(10px);
-}
-
-.form-guide h4 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.form-guide ul {
-    color: #5a6c7d;
-    padding-left: 20px;
-    margin: 0;
-}
-
-.form-guide li {
-    margin-bottom: 8px;
-    line-height: 1.5;
-}
-
-/* Animation for form elements */
-.form-group {
-    animation: slideInUp 0.5s ease forwards;
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-.form-group:nth-child(1) { animation-delay: 0.1s; }
-.form-group:nth-child(2) { animation-delay: 0.2s; }
-.form-group:nth-child(3) { animation-delay: 0.3s; }
-.form-group:nth-child(4) { animation-delay: 0.4s; }
-.form-group:nth-child(5) { animation-delay: 0.5s; }
-.form-group:nth-child(6) { animation-delay: 0.6s; }
-
-@keyframes slideInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .add-event-container {
-        padding: 20px 15px;
-    }
-    
-    .add-event-title {
-        font-size: 2rem;
-        margin-bottom: 20px;
-    }
-    
-    .add-event-card {
-        padding: 30px 20px;
-        border-radius: 15px;
-    }
-    
-    .form-row {
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .form-group {
-        min-width: 100%;
-    }
-    
-    .form-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .btn {
-        width: 100%;
-        max-width: 300px;
-    }
-    
-    .form-input,
-    .form-select,
-    .form-textarea {
-        padding: 12px 15px;
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .add-event-container {
-        padding: 15px 10px;
-    }
-    
-    .add-event-title {
-        font-size: 1.75rem;
-    }
-    
-    .add-event-card {
-        padding: 25px 15px;
-        border-radius: 12px;
-    }
-    
-    .form-guide {
-        padding: 20px 15px;
-    }
-    
-    .form-guide h4 {
-        font-size: 1.1rem;
-    }
-}
-
-/* Focus states for accessibility */
-.form-input:focus-visible,
-.form-select:focus-visible,
-.form-textarea:focus-visible {
-    outline: 2px solid #3498db;
-    outline-offset: 2px;
-}
-
-/* Loading state for submit button */
-.submit-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none !important;
-}
-
-/* Success message animation */
-@keyframes successPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.submit-btn.success {
-    animation: successPulse 0.6s ease;
-    background: linear-gradient(45deg, #27ae60, #219653);
+  }
 }
 </style>
 
 <script>
-// Add some interactive features
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('.event-form');
-    const submitBtn = document.querySelector('.submit-btn');
-    
-    // Add real-time validation
-    const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-    
-    inputs.forEach(input => {
-        input.addEventListener('blur', function() {
-            if (!this.value) {
-                this.style.borderColor = '#e74c3c';
-            } else {
-                this.style.borderColor = '#27ae60';
-            }
-        });
-        
-        input.addEventListener('input', function() {
-            if (this.value) {
-                this.style.borderColor = '#3498db';
-            }
-        });
-    });
-    
-    // Form submission feedback
-    form.addEventListener('submit', function() {
-        submitBtn.textContent = 'Adding Event...';
-        submitBtn.disabled = true;
-    });
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("eventForm");
+  const submitBtn = form.querySelector("button[type=submit]");
+  form.addEventListener("submit", () => {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Adding Event...";
+  });
 });
 </script>
 {% endblock %}

@@ -1,171 +1,142 @@
-<!-- templates/user_view_family.html -->
 {% extends "base.html" %}
 
 {% block title %}Family Details - Samaj Seva{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">{{ family[2] }}</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <a href="{{ url_for('user_families', village_name=family[6]) }}" class="btn btn-sm btn-secondary">
-            Back to Families
+<div class="container-fluid py-3">
+    <!-- Page Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <h2 class="text-primary fw-bold">{{ family[2] }}</h2>
+        <a href="{{ url_for('user_families', village_name=family[6]) }}" class="btn btn-outline-secondary btn-sm">
+            ← Back to Families
         </a>
     </div>
-</div>
 
-<!-- Family Details Card -->
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white">
-        <h5 class="card-title mb-0">Family Information</h5>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <!-- Head Photo -->
-            <div class="col-md-3 text-center">
-                {% if family[7] %}
-                <img src="{{ url_for('uploaded_file', filename=family[7]) }}" 
-                     class="img-thumbnail mb-3" 
-                     alt="Head Photo"
-                     style="width: 150px; height: 150px; object-fit: cover;"
-                     onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
-                {% else %}
-                <img src="https://via.placeholder.com/150?text=No+Photo" 
-                     class="img-thumbnail mb-3" 
-                     alt="No Photo"
-                     style="width: 150px; height: 150px; object-fit: cover;">
-                {% endif %}
-                <h5>{{ family[2] }}</h5>
-                <p class="text-muted">Family Head</p>
-            </div>
-            
-            <!-- Family Information -->
-            <div class="col-md-9">
-                <div class="row">
-                    <div class="col-md-6">
-                        <table class="table table-borderless">
-                            <tr>
-                                <th class="text-muted">Family No:</th>
-                                <td><span class="fs-5 fw-bold text-primary">{{ family[1] }}</span></td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Head Name:</th>
-                                <td>{{ family[2] }}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Birth Date:</th>
-                                <td>{{ family[8] or 'Not specified' }}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Mosad:</th>
-                                <td>{{ family[9] or 'Not specified' }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <table class="table table-borderless">
-                            <tr>
-                                <th class="text-muted">Village:</th>
-                                <td><span class="badge bg-secondary">{{ family[6] }}</span></td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Contact:</th>
-                                <td>
-                                    {% if family[4] %}
-                                    <a href="tel:{{ family[4] }}" class="text-decoration-none">{{ family[4] }}</a>
-                                    {% else %}
-                                    Not available
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">Address:</th>
-                                <td>{{ family[5] or 'Not available' }}</td>
-                            </tr>
-                        </table>
+    <!-- Family Information -->
+    <div class="card shadow-sm mb-4 border-0 rounded-4">
+        <div class="card-header bg-gradient bg-primary text-white rounded-top-4">
+            <h5 class="mb-0">👨‍👩‍👧‍👦 Family Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center text-center text-md-start">
+                <!-- Head Photo -->
+                <div class="col-md-3 mb-3">
+                    <img src="{{ url_for('uploaded_file', filename=family[7]) if family[7] else 'https://via.placeholder.com/150?text=No+Photo' }}" 
+                         class="rounded-circle shadow-sm border border-2 border-primary"
+                         alt="Head Photo"
+                         style="width: 120px; height: 120px; object-fit: cover;"
+                         onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
+                    <h5 class="mt-2 mb-0">{{ family[2] }}</h5>
+                    <p class="text-muted small">Family Head</p>
+                </div>
+
+                <!-- Info -->
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-sm-6 mb-3">
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr><th class="text-muted">Family No:</th><td><strong class="text-primary">{{ family[1] }}</strong></td></tr>
+                                <tr><th class="text-muted">Birth Date:</th><td>{{ family[8] or 'Not specified' }}</td></tr>
+                                <tr><th class="text-muted">Mosad:</th><td>{{ family[9] or 'Not specified' }}</td></tr>
+                            </table>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr><th class="text-muted">Village:</th><td><span class="badge bg-secondary">{{ family[6] }}</span></td></tr>
+                                <tr><th class="text-muted">Contact:</th>
+                                    <td>
+                                        {% if family[4] %}
+                                        <a href="tel:{{ family[4] }}" class="text-decoration-none text-dark">{{ family[4] }}</a>
+                                        {% else %}
+                                        Not available
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr><th class="text-muted">Address:</th><td>{{ family[5] or 'Not available' }}</td></tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Members -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-header bg-gradient bg-success text-white rounded-top-4 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">👥 Family Members</h5>
+            <span class="badge bg-light text-dark">{{ members|length }}</span>
+        </div>
+        <div class="card-body p-0">
+            {% if members %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light sticky-top">
+                        <tr>
+                            <th>Photo</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Relation</th>
+                            <th>Gender</th>
+                            <th>Birth Date</th>
+                            <th>Age</th>
+                            <th>Mobile</th>
+                            <th>Education</th>
+                            <th>Occupation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in members %}
+                        <tr>
+                            <td>
+                                <img src="{{ url_for('uploaded_file', filename=member[11]) if member[11] else 'https://via.placeholder.com/50?text=No+Photo' }}" 
+                                     class="rounded-circle border"
+                                     alt="Member Photo"
+                                     style="width: 45px; height: 45px; object-fit: cover;"
+                                     onerror="this.src='https://via.placeholder.com/50?text=No+Photo'">
+                            </td>
+                            <td><strong>{{ member[2] }}</strong></td>
+                            <td>{{ member[3] }}</td>
+                            <td><span class="badge bg-warning text-dark">{{ member[14] or '-' }}</span></td>
+                            <td>
+                                <span class="badge {% if member[5] == 'Male' %}bg-primary{% else %}bg-danger{% endif %}">
+                                    {{ member[5] or '-' }}
+                                </span>
+                            </td>
+                            <td>{{ member[6] or '-' }}</td>
+                            <td><span class="badge bg-info">{{ member[7] or '-' }}</span></td>
+                            <td>{{ member[9] or '-' }}</td>
+                            <td>{{ member[12] or '-' }}</td>
+                            <td>{{ member[13] or '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <p class="text-muted mb-0">No members found in this family.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
-<!-- Family Members Card -->
-<div class="card">
-    <div class="card-header bg-success text-white">
-        <h5 class="card-title mb-0">Family Members ({{ members|length }})</h5>
-    </div>
-    <div class="card-body">
-        {% if members %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <th>Photo</th>
-                        <th>Member ID</th>
-                        <th>Name</th>
-                        <th>Father/Husband</th>
-                        <th>Gender</th>
-                        <th>Birth Date</th>
-                        <th>Age</th>
-                        <th>Birth Place</th>
-                        <th>Mobile</th>
-                        <th>Education</th>
-                        <th>Occupation</th>
-                        <th>Relation</th>
-                        <th>Remark</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for member in members %}
-                    <tr>
-                        <td>
-                            {% if member[11] %}
-                            <img src="{{ url_for('uploaded_file', filename=member[11]) }}" 
-                                 class="rounded-circle" 
-                                 alt="Member Photo"
-                                 style="width: 50px; height: 50px; object-fit: cover;"
-                                 onerror="this.src='https://via.placeholder.com/50?text=No+Photo'">
-                            {% else %}
-                            <img src="https://via.placeholder.com/50?text=No+Photo" 
-                                 class="rounded-circle" 
-                                 alt="No Photo"
-                                 style="width: 50px; height: 50px; object-fit: cover;">
-                            {% endif %}
-                        </td>
-                        <td><strong>{{ member[2] }}</strong></td>
-                        <td>{{ member[3] }}</td>
-                        <td>{{ member[4] or '-' }}</td>
-                        <td>
-                            <span class="badge {% if member[5] == 'Male' %}bg-primary{% else %}bg-danger{% endif %}">
-                                {{ member[5] or '-' }}
-                            </span>
-                        </td>
-                        <td>{{ member[6] or '-' }}</td>
-                        <td>
-                            {% if member[7] %}
-                            <span class="badge bg-info">{{ member[7] }}</span>
-                            {% else %}
-                            -
-                            {% endif %}
-                        </td>
-                        <td>{{ member[8] or '-' }}</td>
-                        <td>{{ member[9] or '-' }}</td>
-                        <td>{{ member[12] or '-' }}</td>
-                        <td>{{ member[13] or '-' }}</td>
-                        <td>
-                            <span class="badge bg-warning text-dark">{{ member[14] or '-' }}</span>
-                        </td>
-                        <td>{{ member[15] or '-' }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <div class="text-center py-4">
-            <p class="text-muted">No members found in this family.</p>
-        </div>
-        {% endif %}
-    </div>
-</div>
+<!-- Responsive Styling -->
+<style>
+@media (max-width: 768px) {
+    .card-body table th, 
+    .card-body table td {
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    img.rounded-circle {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    h2 {
+        font-size: 1.4rem;
+    }
+}
+</style>
 {% endblock %}

@@ -1,69 +1,75 @@
 {% extends "base.html" %}
+{% block title %}Admin Verification - Samaj Seva{% endblock %}
+
 {% block content %}
-<div class="card" style="max-width: 500px; margin: 50px auto;">
-    <div style="text-align: center; margin-bottom: 30px;">
-        <div style="font-size: 64px; margin-bottom: 20px;">🔒</div>
-        <h2>Admin Verification Required</h2>
-        <p style="color: #666;">Please enter your admin credentials to continue</p>
-    </div>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="flash-area">
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">{{ message }}</div>
-                {% endfor %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg border-0" style="max-width: 420px; width: 100%; border-radius: 16px;">
+        <div class="card-body p-4">
+            <div class="text-center mb-4">
+                <div style="font-size: 64px; color: #0b6;">🔒</div>
+                <h3 class="fw-bold text-success mb-2">Admin Verification</h3>
+                <p class="text-muted small">Enter your admin credentials to continue</p>
             </div>
-        {% endif %}
-    {% endwith %}
 
-    <form method="post">
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Admin Username</label>
-            <input type="text" name="username" required 
-                   style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px;"
-                   placeholder="Enter admin username">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} text-center py-2 mb-3" style="border-radius: 8px;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Verification Form -->
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Admin Username</label>
+                    <input type="text" name="username" class="form-control form-control-lg" required
+                           placeholder="Enter admin username">
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Admin Password</label>
+                    <input type="password" name="password" class="form-control form-control-lg" required
+                           placeholder="Enter admin password">
+                </div>
+
+                <input type="hidden" name="next" value="{{ next_page }}">
+
+                <button type="submit" class="btn w-100 py-2 fw-bold text-white"
+                        style="background: linear-gradient(135deg, #0b6, #084); border-radius: 8px; font-size: 1rem;">
+                    🔒 Verify Admin Access
+                </button>
+            </form>
+
+            <div class="text-center mt-4 p-3 bg-light rounded">
+                <small class="text-muted">
+                    <strong>Security Notice:</strong> This verification is required for sensitive admin operations.<br>
+                    You will remain verified for 30 minutes.
+                </small>
+            </div>
+
+            <div class="text-center mt-3">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary px-4">← Back to Dashboard</a>
+            </div>
         </div>
-        
-        <div style="margin-bottom: 25px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Admin Password</label>
-            <input type="password" name="password" required 
-                   style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px;"
-                   placeholder="Enter admin password">
-        </div>
-
-        <input type="hidden" name="next" value="{{ next_page }}">
-        
-        <button type="submit" 
-                style="width: 100%; padding: 15px; background: #e74c3c; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold;">
-            🔒 Verify Admin Access
-        </button>
-    </form>
-
-    <div style="text-align: center; margin-top: 25px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-        <small style="color: #666;">
-            <strong>Security Notice:</strong> This verification is required for sensitive admin operations.<br>
-            You will remain verified for 30 minutes.
-        </small>
-    </div>
-
-    <div style="text-align: center; margin-top: 20px;">
-        <a href="{{ url_for('dashboard') }}" class="btn" style="display: inline-block; padding: 10px 20px;">← Back to Dashboard</a>
     </div>
 </div>
 
+<!-- Responsive Adjustments -->
 <style>
-.btn {
-    background: #6c757d;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    display: inline-block;
-}
-
-.btn:hover {
-    background: #5a6268;
+@media (max-width: 600px) {
+    .card-body {
+        padding: 1.5rem;
+    }
+    h3 {
+        font-size: 1.3rem;
+    }
+    .btn {
+        font-size: 0.95rem !important;
+    }
 }
 </style>
 {% endblock %}

@@ -1,43 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="manage-villages-container">
-    <h2 class="page-title">Manage Villages / ગામોનું સંચાલન</h2>
+<div class="village-container">
+    <h2 class="title">🏘️ Manage Villages / ગામોનું સંચાલન</h2>
 
-    <!-- Add Village Card -->
-    <div class="add-village-card">
-        <h3 class="card-title">Add New Village / નવું ગામ ઉમેરો</h3>
-        <form method="post" action="{{ url_for('add_village') }}" class="village-form">
-            <div class="form-group">
-                <label class="form-label">Village Name / ગામનું નામ</label>
-                <input type="text" name="name" class="form-input" required 
-                       placeholder="Enter village name / ગામનું નામ દાખલ કરો">
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn primary-btn">Add Village / ગામ ઉમેરો</button>
-            </div>
+    <!-- Add New Village -->
+    <div class="card">
+        <h3 class="card-header">➕ Add New Village / નવું ગામ ઉમેરો</h3>
+        <form method="post" action="{{ url_for('add_village') }}" class="form">
+            <label>Village Name / ગામનું નામ</label>
+            <input type="text" name="name" placeholder="Enter village name..." required>
+            <button type="submit" class="btn primary">Add Village / ગામ ઉમેરો</button>
         </form>
     </div>
 
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="flash-messages">
+            <div class="flash-area">
                 {% for category, message in messages %}
-                    <div class="flash-message {{ category }}">
-                        {{ message }}
-                    </div>
+                    <div class="flash {{ category }}">{{ message }}</div>
                 {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
 
-    <!-- Existing Villages Card -->
-    <div class="villages-list-card">
-        <h3 class="card-title">Existing Villages / હાલનાં ગામો</h3>
-        
+    <!-- Existing Villages -->
+    <div class="card">
+        <h3 class="card-header">📋 Existing Villages / હાલનાં ગામો</h3>
         {% if villages %}
-        <div class="table-container">
-            <table class="villages-table">
+        <div class="table-responsive">
+            <table class="data-table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -49,34 +41,31 @@
                 </thead>
                 <tbody>
                     {% for v in villages %}
-                    <tr class="village-row">
-                        <td class="village-id">{{ v[0] }}</td>
-                        <td class="village-name"><strong>{{ v[1] }}</strong></td>
-                        <td class="families-count">
+                    <tr>
+                        <td>{{ v[0] }}</td>
+                        <td><b>{{ v[1] }}</b></td>
+                        <td>
                             {% if v[4] > 0 %}
-                                <span class="has-families">{{ v[4] }} families</span>
+                                <span class="badge danger">{{ v[4] }} families</span>
                             {% else %}
-                                <span class="no-families">No families</span>
+                                <span class="badge success">No families</span>
                             {% endif %}
                         </td>
-                        <td class="created-by">{{ v[3] or "System" }}</td>
-                        <td class="village-actions">
+                        <td>{{ v[3] or "System" }}</td>
+                        <td>
                             {% if v[4] == 0 %}
-                            <a href="{{ url_for('delete_village', village_id=v[0]) }}" 
-                               class="btn delete-btn"
+                            <a href="{{ url_for('delete_village', village_id=v[0]) }}" class="btn danger"
                                onclick="return confirm('Are you sure you want to delete {{ v[1] }}?')">
-                               Delete / કાઢી નાખો
+                               🗑️ Delete
                             </a>
                             {% else %}
-                            <div class="action-buttons">
-                                <a href="{{ url_for('families') }}?village={{ v[1] }}" 
-                                   class="btn view-families-btn">
-                                   👨‍👩‍👧‍👦 View Families ({{ v[4] }})
+                            <div class="action-group">
+                                <a href="{{ url_for('families') }}?village={{ v[1] }}" class="btn info">
+                                    👨‍👩‍👧‍👦 View Families ({{ v[4] }})
                                 </a>
-                                <a href="{{ url_for('force_delete_village', village_id=v[0]) }}" 
-                                   class="btn force-delete-btn"
-                                   onclick="return confirm('WARNING: This will delete ALL {{ v[4] }} families and their members in {{ v[1] }}. This action cannot be undone!')">
-                                   ⚠️ Force Delete Village
+                                <a href="{{ url_for('force_delete_village', village_id=v[0]) }}" class="btn warning"
+                                   onclick="return confirm('⚠️ WARNING: This will delete all {{ v[4] }} families and members in {{ v[1] }}. This action cannot be undone!')">
+                                   ⚠️ Force Delete
                                 </a>
                             </div>
                             {% endif %}
@@ -87,379 +76,169 @@
             </table>
         </div>
         {% else %}
-        <div class="no-villages">
-            <div class="no-villages-icon">🏘️</div>
-            <p class="no-villages-message">No villages found. Add your first village above. / કોઈ ગામ મળ્યું નથી. પહેલું ગામ ઉમેરો.</p>
+        <div class="empty">
+            <p>🚫 No villages found. Add your first village above. / કોઈ ગામ મળ્યું નથી. પહેલું ગામ ઉમેરો.</p>
         </div>
         {% endif %}
     </div>
 </div>
 
 <style>
-/* Base Styles */
-.manage-villages-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 30px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
+/* General Layout */
+.village-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+    font-family: "Poppins", sans-serif;
+    color: #2c3e50;
 }
 
-.page-title {
-    color: white;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
+.title {
     text-align: center;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-
-/* Card Styles */
-.add-village-card,
-.villages-list-card {
-    background: white;
-    border-radius: 20px;
-    padding: 35px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    backdrop-filter: blur(10px);
-}
-
-.card-title {
-    color: #2c3e50;
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 2rem;
     margin-bottom: 25px;
-    border-bottom: 3px solid #3498db;
-    padding-bottom: 10px;
-}
-
-/* Add Village Form */
-.village-form {
-    width: 100%;
-    max-width: 500px;
-}
-
-.form-group {
-    margin-bottom: 25px;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 15px;
-}
-
-.form-input {
-    width: 100%;
-    padding: 15px 20px;
-    border: 2px solid #e9ecef;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 15px;
     border-radius: 12px;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-.form-input:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-    transform: translateY(-2px);
+/* Card */
+.card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.form-input::placeholder {
-    color: #95a5a6;
+.card-header {
+    font-size: 1.3rem;
+    color: #34495e;
+    margin-bottom: 20px;
+    border-left: 5px solid #3498db;
+    padding-left: 10px;
 }
 
-/* Buttons */
-.form-actions {
-    text-align: left;
+/* Form */
+.form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    font-size: 14px;
 }
 
 .btn {
     display: inline-block;
-    padding: 14px 28px;
+    border: none;
     border-radius: 10px;
+    padding: 10px 18px;
     text-decoration: none;
+    color: white;
+    font-size: 14px;
     font-weight: 600;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    border: none;
     cursor: pointer;
-    text-align: center;
-}
-
-.primary-btn {
-    background: linear-gradient(45deg, #27ae60, #219653);
-    color: white;
-    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
-}
-
-.primary-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
-}
-
-.delete-btn {
-    background: #e74c3c;
-    color: white;
-    padding: 10px 20px;
-    font-size: 14px;
-}
-
-.delete-btn:hover {
-    background: #c0392b;
-    transform: translateY(-2px);
-}
-
-.view-families-btn {
-    background: linear-gradient(45deg, #3498db, #2980b9);
-    color: white;
-    padding: 10px 16px;
-    font-size: 13px;
-    margin-bottom: 8px;
-}
-
-.view-families-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
-}
-
-.force-delete-btn {
-    background: linear-gradient(45deg, #e74c3c, #c0392b);
-    color: white;
-    padding: 8px 12px;
-    font-size: 12px;
-}
-
-.force-delete-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-}
-
-/* Flash Messages */
-.flash-messages {
-    margin-bottom: 25px;
-}
-
-.flash-message {
-    padding: 15px 20px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    font-weight: 500;
-    border-left: 4px solid;
-}
-
-.flash-message.success {
-    background: #d4edda;
-    color: #155724;
-    border-left-color: #27ae60;
-}
-
-.flash-message.error {
-    background: #f8d7da;
-    color: #721c24;
-    border-left-color: #e74c3c;
-}
-
-.flash-message.warning {
-    background: #fff3cd;
-    color: #856404;
-    border-left-color: #f39c12;
-}
-
-/* Villages Table */
-.table-container {
-    overflow-x: auto;
-    border-radius: 12px;
-    border: 1px solid #e9ecef;
-}
-
-.villages-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 800px;
-}
-
-.villages-table thead {
-    background: linear-gradient(135deg, #2c3e50, #34495e);
-}
-
-.villages-table th {
-    padding: 18px 15px;
-    text-align: center;
-    color: white;
-    font-weight: 600;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border: none;
-}
-
-.villages-table td {
-    padding: 16px 12px;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 14px;
-    vertical-align: middle;
-    text-align: center;
-}
-
-.villages-table tbody tr {
     transition: all 0.3s ease;
 }
 
-.villages-table tbody tr:hover {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    transform: scale(1.01);
+.btn.primary { background: linear-gradient(45deg, #27ae60, #2ecc71); }
+.btn.info { background: linear-gradient(45deg, #3498db, #2980b9); }
+.btn.warning { background: linear-gradient(45deg, #f39c12, #e67e22); }
+.btn.danger { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* Table Cell Styles */
-.village-id {
-    font-weight: 700;
-    color: #3498db;
-    background: #f8f9fa;
-}
-
-.village-name {
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 16px;
-}
-
-.families-count .has-families {
-    color: #e74c3c;
-    font-weight: bold;
-    background: #ffeaea;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-}
-
-.families-count .no-families {
-    color: #27ae60;
-    background: #f0fff4;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-}
-
-.created-by {
-    color: #7f8c8d;
-    font-style: italic;
-}
-
-.village-actions {
-    min-width: 200px;
-}
-
-.action-buttons {
+.action-group {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    align-items: center;
 }
 
-/* No Villages State */
-.no-villages {
+/* Table */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th, .data-table td {
+    border-bottom: 1px solid #e9ecef;
+    padding: 12px 10px;
     text-align: center;
-    padding: 60px 20px;
 }
 
-.no-villages-icon {
-    font-size: 64px;
+.data-table th {
+    background: #34495e;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.badge.success { background: #eafaf1; color: #27ae60; }
+.badge.danger { background: #fdecea; color: #c0392b; }
+
+/* Flash Messages */
+.flash-area {
     margin-bottom: 20px;
-    opacity: 0.5;
 }
 
-.no-villages-message {
-    color: #6c757d;
-    font-size: 18px;
-    margin-bottom: 25px;
-    line-height: 1.6;
+.flash {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    border-left: 4px solid;
 }
 
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+.flash.success { background: #d4edda; border-left-color: #27ae60; color: #155724; }
+.flash.error { background: #f8d7da; border-left-color: #e74c3c; color: #721c24; }
+.flash.warning { background: #fff3cd; border-left-color: #f39c12; color: #856404; }
 
-.village-row {
-    animation: fadeInUp 0.5s ease forwards;
+/* Empty state */
+.empty {
+    text-align: center;
+    color: #7f8c8d;
+    padding: 30px 10px;
+    font-size: 16px;
 }
-
-.village-row:nth-child(1) { animation-delay: 0.1s; }
-.village-row:nth-child(2) { animation-delay: 0.2s; }
-.village-row:nth-child(3) { animation-delay: 0.3s; }
-.village-row:nth-child(4) { animation-delay: 0.4s; }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .manage-villages-container {
-        padding: 20px 15px;
-    }
-    
-    .page-title {
-        font-size: 2rem;
-        margin-bottom: 20px;
-    }
-    
-    .add-village-card,
-    .villages-list-card {
-        padding: 25px 20px;
-        border-radius: 15px;
-    }
-    
-    .village-form {
-        max-width: 100%;
-    }
-    
-    .villages-table th,
-    .villages-table td {
-        padding: 12px 8px;
-        font-size: 13px;
-    }
-    
-    .action-buttons {
-        flex-direction: column;
-        gap: 5px;
-    }
-    
-    .btn {
-        padding: 10px 16px;
-        font-size: 13px;
-    }
+    .title { font-size: 1.6rem; }
+    .card { padding: 20px; }
+    .data-table th, .data-table td { font-size: 13px; padding: 8px; }
+    .action-group { flex-direction: column; }
+    .btn { padding: 8px 14px; font-size: 13px; }
 }
 
 @media (max-width: 480px) {
-    .manage-villages-container {
-        padding: 15px 10px;
-    }
-    
-    .page-title {
-        font-size: 1.75rem;
-    }
-    
-    .card-title {
-        font-size: 1.3rem;
-    }
-    
-    .no-villages {
-        padding: 40px 15px;
-    }
-    
-    .no-villages-icon {
-        font-size: 48px;
-    }
+    .title { font-size: 1.3rem; padding: 10px; }
+    .card-header { font-size: 1.1rem; }
+    .btn { width: 100%; text-align: center; }
+    .data-table { font-size: 12px; }
 }
 </style>
 {% endblock %}

@@ -1,133 +1,158 @@
-<!-- templates/families.html -->
 {% extends "base.html" %}
-
 {% block title %}Families - Samaj Seva{% endblock %}
-
 {% block content %}
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Families</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-primary mb-3 mb-md-0">👨‍👩‍👧‍👦 Families</h3>
         {% if session.role in ['admin', 'village_manager'] %}
-        <a href="{{ url_for('add_family') }}" class="btn btn-sm btn-primary">
-            Add New Family
+        <a href="{{ url_for('add_family') }}" class="btn btn-primary shadow-sm">
+            ➕ Add New Family
         </a>
         {% endif %}
     </div>
-</div>
 
-<!-- Filters -->
-<div class="card mb-4">
-    <div class="card-body">
-        <form method="GET" class="row g-3">
-            <div class="col-md-4">
-                <label for="village" class="form-label">Filter by Village:</label>
-                <select name="village" id="village" class="form-select">
-                    <option value="">All Villages</option>
-                    {% for village in villages %}
-                        <option value="{{ village }}" {% if village == selected_village %}selected{% endif %}>
-                            {{ village }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">&nbsp;</label>
-                <div>
-                    <button type="submit" class="btn btn-primary">Apply Filter</button>
-                    <a href="{{ url_for('families') }}" class="btn btn-secondary">Clear</a>
+    <!-- Filter -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4 fade-in">
+        <div class="card-body">
+            <form method="GET" class="row g-3 align-items-end">
+                <div class="col-md-6 col-lg-4">
+                    <label for="village" class="form-label fw-semibold">Filter by Village</label>
+                    <select name="village" id="village" class="form-select form-select-lg rounded-3">
+                        <option value="">All Villages</option>
+                        {% for village in villages %}
+                            <option value="{{ village }}" {% if village == selected_village %}selected{% endif %}>
+                                {{ village }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
-            </div>
-        </form>
+                <div class="col-md-6 col-lg-4">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-3 px-4">Apply</button>
+                    <a href="{{ url_for('families') }}" class="btn btn-outline-secondary btn-lg rounded-3 ms-2">Clear</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- Families List -->
-<div class="row">
-    {% for family in families %}
-    <div class="col-md-6 col-lg-4">
-        <div class="card family-card mb-4">
-            <div class="card-body">
-                <div class="d-flex align-items-center mb-3">
-                    {% if family[7] %}  {# head_photo #}
-                    <img src="{{ url_for('uploaded_file', filename=family[7]) }}" 
-                         class="rounded-circle me-3" 
-                         alt="Head Photo"
-                         style="width: 80px; height: 80px; object-fit: cover;"
-                         onerror="this.src='https://via.placeholder.com/80?text=No+Photo'">
-                    {% else %}
-                    <img src="https://via.placeholder.com/80?text=No+Photo" 
-                         class="rounded-circle me-3" 
-                         alt="No Photo"
-                         style="width: 80px; height: 80px; object-fit: cover;">
-                    {% endif %}
-                    <div>
-                        <h5 class="card-title mb-1">{{ family[2] }}</h5>  {# head_name #}
-                        <p class="card-text text-muted mb-0">Family No: {{ family[1] }}</p>  {# family_no #}
+    <!-- Families List -->
+    <div class="row g-4">
+        {% for family in families %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100 fade-in">
+                <div class="card-body">
+                    <!-- Head photo + details -->
+                    <div class="d-flex align-items-center mb-3">
+                        <img 
+                            src="{{ family[7] and url_for('uploaded_file', filename=family[7]) or 'https://via.placeholder.com/80?text=No+Photo' }}"
+                            class="rounded-circle border border-2 border-primary me-3"
+                            alt="Head Photo"
+                            style="width: 80px; height: 80px; object-fit: cover;"
+                            onerror="this.src='https://via.placeholder.com/80?text=No+Photo'">
+                        <div>
+                            <h5 class="fw-bold mb-1">{{ family[2] }}</h5>
+                            <small class="text-muted">Family No: {{ family[1] }}</small>
+                        </div>
+                    </div>
+
+                    <!-- Info grid -->
+                    <div class="info-grid mb-3">
+                        <div class="fw-semibold text-secondary">Birth Date:</div>
+                        <div>{{ family[8] or 'Not specified' }}</div>
+
+                        <div class="fw-semibold text-secondary">Mosad:</div>
+                        <div>{{ family[9] or 'Not specified' }}</div>
+
+                        <div class="fw-semibold text-secondary">Village:</div>
+                        <div>{{ family[3] }}</div>
+
+                        <div class="fw-semibold text-secondary">Contact:</div>
+                        <div>{{ family[4] or 'Not available' }}</div>
+
+                        <div class="fw-semibold text-secondary">Address:</div>
+                        <div class="small">{{ family[5] or 'Not available' }}</div>
+
+                        <div class="fw-semibold text-secondary">Members:</div>
+                        <div><span class="badge bg-primary rounded-pill">{{ family[6] }}</span></div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="{{ url_for('view_family', family_id=family[0]) }}" 
+                           class="btn btn-outline-primary w-100">
+                           👁 View Details
+                        </a>
+                        {% if session.role == 'admin' %}
+                        <a href="{{ url_for('delete_family', family_id=family[0]) }}" 
+                           class="btn btn-outline-danger"
+                           onclick="return confirm('Are you sure you want to delete this family and all its members?')">
+                           🗑 Delete
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
-
-                <div class="info-grid mb-3">
-                    <div class="fw-bold">Birth Date:</div>
-                    <div>{{ family[8] or 'Not specified' }}</div>  {# head_birthdate #}
-                    
-                    <div class="fw-bold">Mosad:</div>
-                    <div>{{ family[9] or 'Not specified' }}</div>  {# head_mosad #}
-                    
-                    <div class="fw-bold">Village:</div>
-                    <div>{{ family[3] }}</div>  {# village #}
-                    
-                    <div class="fw-bold">Contact:</div>
-                    <div>{{ family[4] or 'Not available' }}</div>  {# contact #}
-                    
-                    <div class="fw-bold">Address:</div>
-                    <div class="small">{{ family[5] or 'Not available' }}</div>  {# address #}
-                    
-                    <div class="fw-bold">Members:</div>
-                    <div><span class="badge bg-primary">{{ family[6] }}</span></div>  {# member_count #}
-                </div>
-
-                <div class="d-flex gap-2">
-                    <a href="{{ url_for('view_family', family_id=family[0]) }}" 
-                       class="btn btn-sm btn-outline-primary flex-fill">View Details</a>
-                    {% if session.role == 'admin' %}
-                    <a href="{{ url_for('delete_family', family_id=family[0]) }}" 
-                       class="btn btn-sm btn-outline-danger"
-                       onclick="return confirm('Are you sure you want to delete this family and all its members?')">Delete</a>
-                    {% endif %}
-                </div>
             </div>
         </div>
-    </div>
-    {% else %}
-    <div class="col-12">
-        <div class="alert alert-info text-center">
-            No families found. 
-            {% if session.role in ['admin', 'village_manager'] %}
-            <a href="{{ url_for('add_family') }}" class="alert-link">Add the first family</a>.
-            {% endif %}
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info text-center shadow-sm rounded-4">
+                No families found. 
+                {% if session.role in ['admin', 'village_manager'] %}
+                <a href="{{ url_for('add_family') }}" class="alert-link">Add the first family</a>.
+                {% endif %}
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
+
 {% endblock %}
 
 {% block styles %}
 <style>
-    .family-card {
-        border: 1px solid #dee2e6;
-        border-radius: 10px;
-        transition: transform 0.2s;
+body {
+    background: #f8fafc;
+}
+
+/* Fade animation */
+.fade-in {
+    animation: fadeInUp 0.4s ease both;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Info grid layout */
+.info-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 15px;
+}
+
+/* Card styling */
+.card {
+    border-radius: 20px;
+    transition: transform 0.25s ease-in-out;
+}
+.card:hover {
+    transform: scale(1.02);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 10px;
+}
+
+/* Mobile-friendly spacing */
+@media (max-width: 768px) {
+    h3 {
+        font-size: 1.5rem;
     }
-    
-    .family-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    .card {
+        border-radius: 16px;
     }
-    
-    .info-grid {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 8px 15px;
-    }
+}
 </style>
 {% endblock %}

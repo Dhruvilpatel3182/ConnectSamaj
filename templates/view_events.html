@@ -1,413 +1,175 @@
 {% extends "base.html" %}
+{% block title %}Events - Samaj Seva{% endblock %}
 {% block content %}
-<div class="events-page-container">
-    <h2 class="events-page-title">Events / ઇવેન્ટ્સ</h2>
+<div class="events-wrapper py-4">
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary mb-2">
+            <i class="fas fa-calendar-alt me-2"></i>Events / ઇવેન્ટ્સ
+        </h2>
+        <p class="text-muted mb-0">View and manage all Samaj events in one place</p>
+    </div>
 
-    <div class="events-filters-card">
-        <form method="get" action="{{ url_for('view_events') }}" class="events-filter-form">
-            <div class="filter-group">
-                <label>Village / ગામ:</label>
-                <select name="village" class="filter-select">
+    <!-- Filter Section -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4 p-4">
+        <form method="get" action="{{ url_for('view_events') }}" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Village / ગામ</label>
+                <select name="village" class="form-select rounded-pill">
                     <option value="">All / બધા</option>
                     {% for v in villages %}
                         <option value="{{ v }}" {% if v == selected_village %}selected{% endif %}>{{ v }}</option>
                     {% endfor %}
                 </select>
             </div>
-            
-            <div class="filter-group">
-                <label>Event Type / પ્રકાર:</label>
-                <select name="event_type" class="filter-select">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Event Type / પ્રકાર</label>
+                <select name="event_type" class="form-select rounded-pill">
                     <option value="">All / બધા</option>
                     {% for et in event_types %}
                         <option value="{{ et }}" {% if et == selected_event_type %}selected{% endif %}>{{ et }}</option>
                     {% endfor %}
                 </select>
             </div>
-            
-            <div class="filter-actions">
-                <button type="submit" class="btn primary filter-btn">Filter / ફિલ્ટર</button>
+            <div class="col-md-4 d-flex gap-2 flex-wrap">
+                <button type="submit" class="btn btn-primary flex-fill rounded-pill">
+                    <i class="fas fa-filter me-1"></i> Filter / ફિલ્ટર
+                </button>
                 {% if session.role in ['admin', 'village_manager'] %}
-                <a href="{{ url_for('add_event') }}" class="btn add-event-btn">➕ Add Event</a>
+                <a href="{{ url_for('add_event') }}" class="btn btn-success flex-fill rounded-pill">
+                    <i class="fas fa-plus me-1"></i> Add Event
+                </a>
                 {% endif %}
             </div>
         </form>
     </div>
 
-    <div class="events-list-card">
-        {% if events %}
-        <div class="events-table-container">
-            <table class="events-data-table">
-                <thead>
-                    <tr>
-                        <th>Type / પ્રકાર</th>
-                        <th>Event Name / ઇવેન્ટ</th>
-                        <th>Village / ગામ</th>
-                        <th>Date / તારીખ</th>
-                        <th>Time / સમય</th>
-                        <th>Description / વિગત</th>
-                        <th>Created By / ઉમેરનાર</th>
-                        <th>Actions / ક્રિયાઓ</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for event in events %}
-                    <tr class="event-data-row">
-                        <td>
-                            <span class="event-type-badge">
-                                {{ event[1] }}
-                            </span>
-                        </td>
-                        <td class="event-name-cell"><strong>{{ event[2] }}</strong></td>
-                        <td class="event-village-cell">{{ event[4] }}</td>
-                        <td class="event-date-cell">{{ event[5] }}</td>
-                        <td class="event-time-cell">{{ event[6] or "-" }}</td>
-                        <td class="event-desc-cell">{{ event[3] or "-" }}</td>
-                        <td class="event-creator-cell">{{ event[8] or "System" }}</td>
-                        <td class="event-actions-cell">
-                            {% if session.role == 'admin' %}
-                            <a class="btn delete-event-btn" 
-                               href="{{ url_for('delete_event', event_id=event[0]) }}"
-                               onclick="return confirm('Delete event {{ event[2] }}?')">
-                               Delete / કાઢી નાખો
-                            </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <!-- Event List -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-header bg-gradient bg-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="fas fa-list me-2"></i> Events List</h5>
+            <span class="badge bg-light text-dark fs-6">{{ events|length }} Total</span>
         </div>
-        {% else %}
-        <div class="no-events-found">
-            <div class="no-events-icon">📅</div>
-            <p class="no-events-message">No events found / કોઈ ઇવેન્ટ મળ્યો નથી</p>
-            {% if session.role in ['admin', 'village_manager'] %}
-            <a href="{{ url_for('add_event') }}" class="btn primary add-first-event-btn">Add First Event</a>
+        <div class="card-body p-0">
+            {% if events %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Type</th>
+                            <th>Event Name</th>
+                            <th>Village</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Description</th>
+                            <th>Created By</th>
+                            {% if session.role == 'admin' %}
+                            <th>Actions</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                        <tr>
+                            <td>
+                                <span class="badge bg-info text-dark px-3 py-2 rounded-pill">
+                                    {{ event[1] }}
+                                </span>
+                            </td>
+                            <td class="fw-semibold text-primary">{{ event[2] }}</td>
+                            <td>{{ event[4] }}</td>
+                            <td><span class="text-danger fw-semibold">{{ event[5] }}</span></td>
+                            <td><span class="text-secondary">{{ event[6] or "-" }}</span></td>
+                            <td class="text-muted">{{ event[3] or "-" }}</td>
+                            <td class="text-muted fst-italic">{{ event[8] or "System" }}</td>
+                            {% if session.role == 'admin' %}
+                            <td>
+                                <a href="{{ url_for('delete_event', event_id=event[0]) }}" 
+                                   class="btn btn-outline-danger btn-sm rounded-pill"
+                                   onclick="return confirm('Are you sure to delete {{ event[2] }}?')">
+                                   <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                <h5 class="text-secondary">No events found / કોઈ ઇવેન્ટ મળ્યો નથી</h5>
+                {% if session.role in ['admin', 'village_manager'] %}
+                <a href="{{ url_for('add_event') }}" class="btn btn-success rounded-pill mt-3">
+                    <i class="fas fa-plus me-1"></i> Add First Event
+                </a>
+                {% endif %}
+            </div>
             {% endif %}
         </div>
-        {% endif %}
     </div>
-
-    {% if events %}
-    <div class="events-summary-card">
-        <p><strong>Total Events: {{ events|length }}</strong></p>
-    </div>
-    {% endif %}
 </div>
 
+<!-- Custom Styles -->
 <style>
-/* Base Styles */
-.events-page-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.events-wrapper {
+    background: linear-gradient(135deg, #eef2f3, #ffffff);
     min-height: 100vh;
 }
-
-.events-page-title {
-    color: white;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
+.card {
+    backdrop-filter: blur(10px);
+}
+.table th, .table td {
     text-align: center;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-
-/* Filters Card */
-.events-filters-card {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-.events-filter-form {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    align-items: end;
-}
-
-.filter-group {
-    flex: 1;
-    min-width: 200px;
-}
-
-.filter-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 14px;
-}
-
-.filter-select {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    background: white;
-}
-
-.filter-select:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-}
-
-.filter-actions {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-/* Buttons */
-.btn {
-    display: inline-block;
-    padding: 12px 24px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-}
-
-.btn.primary {
-    background: linear-gradient(45deg, #3498db, #2980b9);
-    color: white;
-}
-
-.btn.primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-}
-
-.filter-btn {
-    white-space: nowrap;
-}
-
-.add-event-btn {
-    background: linear-gradient(45deg, #27ae60, #219653);
-    color: white;
-}
-
-.add-event-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
-}
-
-.delete-event-btn {
-    background: #e74c3c;
-    color: white;
-    font-size: 12px;
-    padding: 8px 16px;
-}
-
-.delete-event-btn:hover {
-    background: #c0392b;
-    transform: translateY(-1px);
-}
-
-/* Events List Card */
-.events-list-card {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    margin-bottom: 25px;
-}
-
-/* Table Container */
-.events-table-container {
-    overflow-x: auto;
-    border-radius: 10px;
-    border: 1px solid #e9ecef;
-}
-
-.events-data-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 1000px;
-}
-
-.events-data-table thead {
-    background: linear-gradient(135deg, #2c3e50, #34495e);
-}
-
-.events-data-table th {
-    padding: 18px 15px;
-    text-align: center;
-    color: white;
-    font-weight: 600;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border: none;
-}
-
-.events-data-table td {
-    padding: 15px 12px;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 14px;
     vertical-align: middle;
-    text-align: center;
 }
-
-.events-data-table tbody tr {
-    transition: all 0.3s ease;
+.table thead th {
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
 }
-
-.events-data-table tbody tr:hover {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    transform: scale(1.01);
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+    transition: 0.3s;
 }
-
-/* Event Type Badge */
-.event-type-badge {
-    background: linear-gradient(45deg, #00b09b, #96c93d);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-/* Table Cell Styles */
-.event-name-cell {
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.event-village-cell {
-    color: #7f8c8d;
-    font-weight: 500;
-}
-
-.event-date-cell {
-    color: #e74c3c;
-    font-weight: 500;
-}
-
-.event-time-cell {
-    color: #3498db;
-    font-weight: 500;
-}
-
-.event-desc-cell {
-    color: #7f8c8d;
-    max-width: 200px;
-    text-align: left;
-}
-
-.event-creator-cell {
-    color: #95a5a6;
-    font-style: italic;
-}
-
-.event-actions-cell {
-    text-align: center;
-}
-
-/* No Events State */
-.no-events-found {
-    text-align: center;
-    padding: 60px 20px;
-}
-
-.no-events-icon {
-    font-size: 64px;
-    margin-bottom: 20px;
-    opacity: 0.5;
-}
-
-.no-events-message {
-    color: #6c757d;
-    font-size: 18px;
-    margin-bottom: 25px;
-}
-
-.add-first-event-btn {
-    padding: 12px 24px;
-    font-size: 16px;
-}
-
-/* Events Summary */
-.events-summary-card {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-}
-
-.events-summary-card p {
-    margin: 0;
-    color: #2c3e50;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
-    .events-page-container {
+    .events-wrapper {
         padding: 15px;
     }
-    
-    .events-page-title {
-        font-size: 2rem;
+    .card {
+        border-radius: 12px;
     }
-    
-    .events-filter-form {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .filter-group {
-        min-width: 100%;
-    }
-    
-    .filter-actions {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .filter-actions .btn {
-        width: 100%;
-    }
-    
-    .events-filters-card,
-    .events-list-card {
-        padding: 20px;
-    }
-    
-    .events-data-table th,
-    .events-data-table td {
-        padding: 12px 8px;
+    .table {
         font-size: 13px;
     }
+    .card-header h5 {
+        font-size: 1rem;
+    }
 }
-
 @media (max-width: 480px) {
-    .events-page-container {
+    .table thead {
+        display: none;
+    }
+    .table tbody tr {
+        display: block;
+        background: #fff;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         padding: 10px;
     }
-    
-    .events-page-title {
-        font-size: 1.75rem;
+    .table td {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        padding: 8px 10px;
+        border: none;
     }
-    
-    .no-events-found {
-        padding: 40px 15px;
+    .table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #555;
     }
 }
 </style>

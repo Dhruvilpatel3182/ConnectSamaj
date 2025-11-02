@@ -1,55 +1,63 @@
 {% extends "base.html" %}
+{% block title %}Manage Users | Samaj Seva{% endblock %}
 {% block content %}
+
 <div class="manage-users-container">
-    <h2 class="page-title">Manage Users / વપરાશકર્તાઓનું સંચાલન</h2>
-
-    <!-- Add User Card -->
-    <div class="add-user-card">
-        <h3 class="card-title">Add New User / નવો વપરાશકર્તા ઉમેરો</h3>
-        <form method="post" action="{{ url_for('add_user') }}" class="user-form">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Username / વપરાશકર્તા નામ</label>
-                    <input type="text" name="username" class="form-input" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Password / પાસવર્ડ</label>
-                    <input type="password" name="password" class="form-input" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Role / ભૂમિકા</label>
-                    <select name="role" class="form-select" required>
-                        <option value="admin">Admin / સંચાલક</option>
-                        <option value="village_manager">Village Manager / ગામ સંચાલક</option>
-                        <option value="member">Member / સભ્ય</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Assigned Village / સોંપેલ ગામ</label>
-                    <select name="village" class="form-select">
-                        <option value="">None (for admin) / કોઈ નહીં</option>
-                        {% for village in villages %}
-                        <option value="{{ village }}">{{ village }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn primary-btn">Add User / વપરાશકર્તા ઉમેરો</button>
-            </div>
-        </form>
+    <div class="text-center mb-4">
+        <h2 class="page-title">Manage Users / વપરાશકર્તાઓનું સંચાલન</h2>
     </div>
 
-    <!-- Existing Users Card -->
-    <div class="users-list-card">
-        <h3 class="card-title">Existing Users / હાલનાં વપરાશકર્તાઓ</h3>
-        <div class="table-container">
-            <table class="users-table">
-                <thead>
+    <!-- Add User Section -->
+    <div class="card shadow-lg mb-4 border-0 rounded-4">
+        <div class="card-header bg-primary text-white fw-bold rounded-top-4">
+            Add New User / નવો વપરાશકર્તા ઉમેરો
+        </div>
+        <div class="card-body">
+            <form method="post" action="{{ url_for('add_user') }}">
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <label class="form-label">Role</label>
+                        <select name="role" class="form-select" required>
+                            <option value="admin">Admin / સંચાલક</option>
+                            <option value="village_manager">Village Manager / ગામ સંચાલક</option>
+                            <option value="member">Member / સભ્ય</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <label class="form-label">Assigned Village</label>
+                        <select name="village" class="form-select">
+                            <option value="">None (for admin)</option>
+                            {% for village in villages %}
+                                <option value="{{ village }}">{{ village }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success px-4 py-2">
+                        <i class="fas fa-user-plus me-2"></i>Add User
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Existing Users -->
+    <div class="card shadow-lg mb-4 border-0 rounded-4">
+        <div class="card-header bg-dark text-white fw-bold rounded-top-4">
+            Existing Users / હાલનાં વપરાશકર્તાઓ
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle text-center">
+                <thead class="table-dark">
                     <tr>
                         <th>ID</th>
                         <th>Username</th>
@@ -60,28 +68,27 @@
                 </thead>
                 <tbody>
                     {% for user in users %}
-                    <tr class="user-row">
-                        <td class="user-id">{{ user[0] }}</td>
-                        <td class="username">{{ user[1] }}</td>
-                        <td class="user-role">
+                    <tr>
+                        <td class="fw-bold text-primary">{{ user[0] }}</td>
+                        <td>{{ user[1] }}</td>
+                        <td>
                             {% if user[2] == 'admin' %}
-                            <span class="role-badge admin-badge">{{ user[2]|title }}</span>
+                                <span class="badge bg-danger">{{ user[2]|title }}</span>
                             {% elif user[2] == 'village_manager' %}
-                            <span class="role-badge manager-badge">{{ user[2]|title }}</span>
+                                <span class="badge bg-info text-dark">{{ user[2]|title }}</span>
                             {% else %}
-                            <span class="role-badge member-badge">{{ user[2]|title }}</span>
+                                <span class="badge bg-success">{{ user[2]|title }}</span>
                             {% endif %}
                         </td>
-                        <td class="user-village">{{ user[4] or "-" }}</td>
-                        <td class="user-actions">
+                        <td>{{ user[4] or "-" }}</td>
+                        <td>
                             {% if user[0] != 1 %}
-                            <a href="{{ url_for('delete_user', user_id=user[0]) }}" 
-                               class="btn delete-btn"
+                            <a href="{{ url_for('delete_user', user_id=user[0]) }}" class="btn btn-sm btn-danger"
                                onclick="return confirm('Are you sure you want to delete this user?')">
-                               Delete
+                                <i class="fas fa-trash-alt"></i>
                             </a>
                             {% else %}
-                            <span class="protected-text">Protected</span>
+                            <span class="text-muted fst-italic">Protected</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -91,400 +98,69 @@
         </div>
     </div>
 
-    <!-- Role Information Card -->
-    <div class="roles-info-card">
-        <h3 class="card-title">Role Information / ભૂમિકા માહિતી</h3>
-        <div class="roles-grid">
-            <div class="role-card admin-role">
-                <h4 class="role-title">Admin</h4>
-                <ul class="role-features">
-                    <li>Manage all villages</li>
-                    <li>Manage all users</li>
-                    <li>Full system access</li>
-                    <li>Delete permissions</li>
-                </ul>
+    <!-- Role Info Section -->
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card bg-danger text-white h-100 shadow-lg border-0 rounded-4">
+                <div class="card-body text-center">
+                    <h4>Admin</h4>
+                    <ul class="list-unstyled mt-3 text-start small">
+                        <li>✔ Manage all villages</li>
+                        <li>✔ Manage all users</li>
+                        <li>✔ Full system access</li>
+                        <li>✔ Delete permissions</li>
+                    </ul>
+                </div>
             </div>
-            <div class="role-card manager-role">
-                <h4 class="role-title">Village Manager</h4>
-                <ul class="role-features">
-                    <li>Manage assigned village</li>
-                    <li>Add families & members</li>
-                    <li>Add events</li>
-                    <li>Limited permissions</li>
-                </ul>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-dark h-100 shadow-lg border-0 rounded-4">
+                <div class="card-body text-center">
+                    <h4>Village Manager</h4>
+                    <ul class="list-unstyled mt-3 text-start small">
+                        <li>✔ Manage assigned village</li>
+                        <li>✔ Add families & members</li>
+                        <li>✔ Add events</li>
+                        <li>✔ Limited permissions</li>
+                    </ul>
+                </div>
             </div>
-            <div class="role-card member-role">
-                <h4 class="role-title">Member</h4>
-                <ul class="role-features">
-                    <li>View own village data</li>
-                    <li>Read-only access</li>
-                    <li>No edit permissions</li>
-                    <li>Basic access</li>
-                </ul>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white h-100 shadow-lg border-0 rounded-4">
+                <div class="card-body text-center">
+                    <h4>Member</h4>
+                    <ul class="list-unstyled mt-3 text-start small">
+                        <li>✔ View own village data</li>
+                        <li>✔ Read-only access</li>
+                        <li>✔ No edit permissions</li>
+                        <li>✔ Basic access</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-/* Base Styles */
 .manage-users-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 30px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
+    padding: 20px;
 }
-
 .page-title {
-    color: white;
-    font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 30px;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    color: #333;
 }
-
-/* Card Styles */
-.add-user-card,
-.users-list-card,
-.roles-info-card {
-    background: white;
-    border-radius: 20px;
-    padding: 35px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    backdrop-filter: blur(10px);
-}
-
-.card-title {
-    color: #2c3e50;
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 25px;
-    border-bottom: 3px solid #3498db;
-    padding-bottom: 10px;
-}
-
-/* Add User Form */
-.user-form {
-    width: 100%;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-    margin-bottom: 25px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-label {
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 14px;
-}
-
-.form-input,
-.form-select {
-    padding: 14px 16px;
-    border: 2px solid #e9ecef;
-    border-radius: 10px;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    background: white;
-}
-
-.form-input:focus,
-.form-select:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-    transform: translateY(-2px);
-}
-
-/* Buttons */
-.form-actions {
-    text-align: center;
-    margin-top: 25px;
-}
-
-.btn {
-    display: inline-block;
-    padding: 14px 28px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    min-width: 140px;
-}
-
-.primary-btn {
-    background: linear-gradient(45deg, #27ae60, #219653);
-    color: white;
-    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
-}
-
-.primary-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
-}
-
-.delete-btn {
-    background: #e74c3c;
-    color: white;
-    padding: 8px 16px;
-    font-size: 13px;
-    min-width: auto;
-}
-
-.delete-btn:hover {
-    background: #c0392b;
-    transform: translateY(-2px);
-}
-
-/* Users Table */
-.table-container {
-    overflow-x: auto;
-    border-radius: 12px;
-    border: 1px solid #e9ecef;
-}
-
-.users-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 700px;
-}
-
-.users-table thead {
-    background: linear-gradient(135deg, #2c3e50, #34495e);
-}
-
-.users-table th {
-    padding: 18px 15px;
-    text-align: center;
-    color: white;
-    font-weight: 600;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border: none;
-}
-
-.users-table td {
-    padding: 16px 12px;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 14px;
+.table th, .table td {
     vertical-align: middle;
-    text-align: center;
 }
-
-.users-table tbody tr {
-    transition: all 0.3s ease;
+.card-header {
+    font-size: 1.2rem;
 }
-
-.users-table tbody tr:hover {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    transform: scale(1.01);
-}
-
-/* Role Badges */
-.role-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-}
-
-.admin-badge {
-    background: linear-gradient(45deg, #e74c3c, #c0392b);
-    color: white;
-}
-
-.manager-badge {
-    background: linear-gradient(45deg, #3498db, #2980b9);
-    color: white;
-}
-
-.member-badge {
-    background: linear-gradient(45deg, #2ecc71, #27ae60);
-    color: white;
-}
-
-/* User Info Cells */
-.user-id {
-    font-weight: 700;
-    color: #3498db;
-    background: #f8f9fa;
-}
-
-.username {
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.user-village {
-    color: #7f8c8d;
-}
-
-.protected-text {
-    color: #95a5a6;
-    font-style: italic;
-}
-
-/* Roles Information */
-.roles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-}
-
-.role-card {
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-.role-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-.admin-role {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-    color: white;
-}
-
-.manager-role {
-    background: linear-gradient(135deg, #4ecdc4, #44a08d);
-    color: white;
-}
-
-.member-role {
-    background: linear-gradient(135deg, #45b7d1, #96c93d);
-    color: white;
-}
-
-.role-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.role-features {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.role-features li {
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    position: relative;
-    padding-left: 20px;
-}
-
-.role-features li:before {
-    content: "✓";
-    position: absolute;
-    left: 0;
-    font-weight: bold;
-}
-
-.role-features li:last-child {
-    border-bottom: none;
-}
-
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.user-row {
-    animation: fadeInUp 0.5s ease forwards;
-}
-
-.user-row:nth-child(1) { animation-delay: 0.1s; }
-.user-row:nth-child(2) { animation-delay: 0.2s; }
-.user-row:nth-child(3) { animation-delay: 0.3s; }
-.user-row:nth-child(4) { animation-delay: 0.4s; }
-
-/* Responsive Design */
 @media (max-width: 768px) {
-    .manage-users-container {
-        padding: 20px 15px;
-    }
-    
-    .page-title {
-        font-size: 2rem;
-        margin-bottom: 20px;
-    }
-    
-    .add-user-card,
-    .users-list-card,
-    .roles-info-card {
-        padding: 25px 20px;
-        border-radius: 15px;
-    }
-    
-    .form-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .roles-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .users-table th,
-    .users-table td {
-        padding: 12px 8px;
-        font-size: 13px;
-    }
-    
-    .btn {
-        padding: 12px 20px;
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .manage-users-container {
-        padding: 15px 10px;
-    }
-    
-    .page-title {
-        font-size: 1.75rem;
-    }
-    
-    .card-title {
-        font-size: 1.3rem;
-    }
-    
-    .role-card {
-        padding: 20px 15px;
-    }
+    .page-title { font-size: 1.6rem; }
+    .card-body { padding: 1rem; }
+    table { font-size: 0.85rem; }
 }
 </style>
+
 {% endblock %}

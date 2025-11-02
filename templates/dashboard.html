@@ -1,258 +1,165 @@
 {% extends "base.html" %}
 {% block content %}
 
-
-
-<div class="dashboard-header" style="text-align: center; margin-bottom: 30px;">
-    <h1>Welcome to Samaj Seva! 🎉</h1>
-    <p class="subtitle" style="color: #666; font-size: 18px;">Community Management System</p>
+<div class="text-center my-4">
+    <h1 class="fw-bold text-primary">Welcome to Samaj Seva! 🎉</h1>
+    <p class="text-muted">Community Management System</p>
 </div>
 
 <!-- User Info Card -->
-<div class="card" style="background: linear-gradient(135deg, #0b6 0%, #084 100%); color: white;">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+<div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #0b6, #084); color: #fff;">
+    <div class="card-body d-flex flex-wrap justify-content-between align-items-center">
         <div>
-            <h2 style="margin: 0; color: white;">Welcome, {{ session.username }}! 👋</h2>
-            <p style="margin: 5px 0 0 0; opacity: 0.9;">
+            <h4 class="mb-1">Welcome, {{ session.username }} 👋</h4>
+            <p class="mb-0">
                 <strong>Role:</strong> {{ session.role|title }}
                 {% if session.village %}
-                • <strong>Village:</strong> {{ session.village }}
+                    • <strong>Village:</strong> {{ session.village }}
                 {% endif %}
             </p>
         </div>
-        <div style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 10px;">
+        <div class="bg-white bg-opacity-25 px-3 py-2 rounded-3">
             <small>Last Login: Today</small>
         </div>
     </div>
 </div>
 
 <!-- Statistics Cards -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
-    <div class="card" style="text-align: center; background: linear-gradient(135deg, #0b6 0%, #084 100%); color: white;">
-        <div style="font-size: 32px; margin-bottom: 10px;">🏠</div>
-        <h3 style="margin: 0; color: white;">Families</h3>
-        <p style="font-size: 32px; font-weight: bold; margin: 10px 0;">{{ families_count }}</p>
-        <small>Total Families</small>
+<div class="row g-3">
+    <div class="col-6 col-md-3">
+        <div class="card text-center text-white shadow-sm" style="background: linear-gradient(135deg, #0b6, #084);">
+            <div class="card-body">
+                <div class="fs-2 mb-2">🏠</div>
+                <h6>Families</h6>
+                <h3 class="fw-bold">{{ families_count }}</h3>
+            </div>
+        </div>
     </div>
-    
-    <div class="card" style="text-align: center; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white;">
-        <div style="font-size: 32px; margin-bottom: 10px;">👥</div>
-        <h3 style="margin: 0; color: white;">Members</h3>
-        <p style="font-size: 32px; font-weight: bold; margin: 10px 0;">{{ members_count }}</p>
-        <small>Total Members</small>
+
+    <div class="col-6 col-md-3">
+        <div class="card text-center text-white shadow-sm" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+            <div class="card-body">
+                <div class="fs-2 mb-2">👥</div>
+                <h6>Members</h6>
+                <h3 class="fw-bold">{{ members_count }}</h3>
+            </div>
+        </div>
     </div>
-    
-    <div class="card" style="text-align: center; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white;">
-        <div style="font-size: 32px; margin-bottom: 10px;">📅</div>
-        <h3 style="margin: 0; color: white;">Events</h3>
-        <p style="font-size: 32px; font-weight: bold; margin: 10px 0;">{{ events_count }}</p>
-        <small>Total Events</small>
+
+    <div class="col-6 col-md-3">
+        <div class="card text-center text-white shadow-sm" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+            <div class="card-body">
+                <div class="fs-2 mb-2">📅</div>
+                <h6>Events</h6>
+                <h3 class="fw-bold">{{ events_count }}</h3>
+            </div>
+        </div>
     </div>
-    
+
     {% if session.role == 'admin' %}
-    <div class="card" style="text-align: center; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white;">
-        <div style="font-size: 32px; margin-bottom: 10px;">🏘️</div>
-        <h3 style="margin: 0; color: white;">Villages</h3>
-        <p style="font-size: 32px; font-weight: bold; margin: 10px 0;">{{ villages_count }}</p>
-        <small>Managed Villages</small>
+    <div class="col-6 col-md-3">
+        <div class="card text-center text-white shadow-sm" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+            <div class="card-body">
+                <div class="fs-2 mb-2">🏘️</div>
+                <h6>Villages</h6>
+                <h3 class="fw-bold">{{ villages_count }}</h3>
+            </div>
+        </div>
     </div>
     {% endif %}
 </div>
 
 <!-- Quick Actions Section -->
-<div class="card" style="margin-top: 30px;">
-    <h3>🚀 Quick Actions</h3>
-    
-    {% if session.role == 'admin' %}
-    <!-- Admin Only Actions -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-        <a href="{{ url_for('user_villages') }}" class="btn" style="text-align: center; padding: 20px; background: #667eea; color: white;">
-            <div style="font-size: 24px; margin-bottom: 10px;">🏘️</div>
-            <strong>View Villages</strong>
-            <div style="font-size: 12px; opacity: 0.9;">User View</div>
-        </a>
-        
-        <a href="{{ url_for('families') }}" class="btn" style="text-align: center; padding: 20px; background: #0b6; color: white;">
-            <div style="font-size: 24px; margin-bottom: 10px;">🏠</div>
-            <strong>Manage Families</strong>
-            <div style="font-size: 12px; opacity: 0.9;">Admin Only</div>
-        </a>
-        
-        <a href="{{ url_for('view_members') }}" class="btn" style="text-align: center; padding: 20px; background: #3498db; color: white;">
-            <div style="font-size: 24px; margin-bottom: 10px;">👥</div>
-            <strong>Manage Members</strong>
-            <div style="font-size: 12px; opacity: 0.9;">Admin Only</div>
-        </a>
-        
-        <a href="{{ url_for('add_family') }}" class="btn" style="text-align: center; padding: 20px; background: #9b59b6; color: white;">
-            <div style="font-size: 24px; margin-bottom: 10px;">➕</div>
-            <strong>Add Family</strong>
-            <div style="font-size: 12px; opacity: 0.9;">Admin Only</div>
-        </a>
-        
-        <a href="{{ url_for('add_member') }}" class="btn" style="text-align: center; padding: 20px; background: #e67e22; color: white;">
-            <div style="font-size: 24px; margin-bottom: 10px;">👤</div>
-            <strong>Add Member</strong>
-            <div style="font-size: 12px; opacity: 0.9;">Admin Only</div>
-        </a>
-        
-        <a href="{{ url_for('add_event') }}" class="btn" style="text-align: center; padding: 20px; background: #e74c3c; color: white;">
-            <div style="font-size: 24px; margin-bottom: 10px;">📅</div>
-            <strong>Add Event</strong>
-            <div style="font-size: 12px; opacity: 0.9;">Everyone</div>
-        </a>
-    </div>
-    
-    {% else %}
-    <!-- Regular Users & Village Managers - View Only -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-        <a href="{{ url_for('user_villages') }}" class="btn" style="text-align: center; padding: 20px; background: #667eea; color: white;">
-            <div style="font-size: 24px; margin-bottom: 10px;">🏘️</div>
-            <strong>View Villages</strong>
-            <div style="font-size: 12px; opacity: 0.9;">Read Only</div>
-        </a>
-        
-        {% if session.village %}
-        <a href="{{ url_for('user_families', village_name=session.village) }}" class="btn" style="text-align: center; padding: 20px; background: #0b6; color: white;">
-            <div style="font-size: 24px; margin-bottom: 10px;">👨‍👩‍👧‍👦</div>
-            <strong>View Families</strong>
-            <div style="font-size: 12px; opacity: 0.9;">{{ session.village }}</div>
-        </a>
-        {% endif %}
-        
-        <a href="{{ url_for('view_events') }}" class="btn" style="text-align: center; padding: 20px; background: #9b59b6; color: white;">
-            <div style="font-size: 24px; margin-bottom: 10px;">📅</div>
-            <strong>View Events</strong>
-            <div style="font-size: 12px; opacity: 0.9;">Community Events</div>
-        </a>
-        
-        <a href="{{ url_for('add_event') }}" class="btn" style="text-align: center; padding: 20px; background: #e74c3c; color: white;">
-            <div style="font-size: 24px; margin-bottom: 10px;">➕</div>
-            <strong>Add Event</strong>
-            <div style="font-size: 12px; opacity: 0.9;">Everyone Can Add</div>
-        </a>
-    </div>
-    {% endif %}
-</div>
-
-<!-- Admin Only Section -->
-{% if session.role == 'admin' %}
-<div class="card" style="margin-top: 30px; background: #f8f9fa; border-left: 4px solid #e74c3c;">
-    <h3>⚙️ Admin Tools <span style="background: #e74c3c; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px;">ADMIN ONLY</span></h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-        <a href="{{ url_for('manage_users') }}" class="btn" style="background: #e74c3c; color: white;">👥 Manage Users</a>
-        <a href="{{ url_for('manage_villages') }}" class="btn" style="background: #e74c3c; color: white;">🏘️ Manage Villages</a>
-        <a href="{{ url_for('families') }}" class="btn" style="background: #0b6; color: white;">🏠 All Families</a>
-        <a href="{{ url_for('view_members') }}" class="btn" style="background: #3498db; color: white;">👥 All Members</a>
-        <a href="{{ url_for('view_events') }}" class="btn" style="background: #9b59b6; color: white;">📅 All Events</a>
-    </div>
-</div>
-{% endif %}
-
-<!-- Role Information Section -->
-<div class="card" style="margin-top: 30px; background: #e8f4fd; border-left: 4px solid #3498db;">
-    <h3 style="color: #2980b9;">👥 Your Access Level</h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-        <div>
-            <h4 style="color: #2980b9; margin-bottom: 10px;">
-                {% if session.role == 'admin' %}
-                🔧 Administrator
-                {% elif session.role == 'village_manager' %}
-                👨‍💼 Village Manager
-                {% else %}
-                👤 Community Member
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-body">
+        <h4 class="mb-3">🚀 Quick Actions</h4>
+        <div class="row g-3">
+            {% if session.role == 'admin' %}
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ url_for('user_villages') }}" class="btn w-100 py-3 text-white" style="background: #667eea;">
+                        🏘️<br><strong>View Villages</strong>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ url_for('families') }}" class="btn w-100 py-3 text-white" style="background: #0b6;">
+                        🏠<br><strong>Manage Families</strong>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ url_for('view_members') }}" class="btn w-100 py-3 text-white" style="background: #3498db;">
+                        👥<br><strong>Manage Members</strong>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ url_for('add_family') }}" class="btn w-100 py-3 text-white" style="background: #9b59b6;">
+                        ➕<br><strong>Add Family</strong>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ url_for('add_member') }}" class="btn w-100 py-3 text-white" style="background: #e67e22;">
+                        👤<br><strong>Add Member</strong>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ url_for('add_event') }}" class="btn w-100 py-3 text-white" style="background: #e74c3c;">
+                        📅<br><strong>Add Event</strong>
+                    </a>
+                </div>
+            {% else %}
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ url_for('user_villages') }}" class="btn w-100 py-3 text-white" style="background: #667eea;">
+                        🏘️<br><strong>View Villages</strong>
+                    </a>
+                </div>
+                {% if session.village %}
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ url_for('user_families', village_name=session.village) }}" class="btn w-100 py-3 text-white" style="background: #0b6;">
+                        👨‍👩‍👧‍👦<br><strong>View Families</strong>
+                    </a>
+                </div>
                 {% endif %}
-            </h4>
-            <ul style="margin: 0; padding-left: 20px;">
-                {% if session.role == 'admin' %}
-                <li>Full system access</li>
-                <li>Add/edit/delete families & members</li>
-                <li>Manage users & villages</li>
-                <li>System configuration</li>
-                {% elif session.role == 'village_manager' %}
-                <li>View village data</li>
-                <li>Add community events</li>
-                <li>Read-only access to families</li>
-                {% else %}
-                <li>View your village data</li>
-                <li>Add community events</li>
-                <li>Read-only access</li>
-                {% endif %}
-            </ul>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ url_for('view_events') }}" class="btn w-100 py-3 text-white" style="background: #9b59b6;">
+                        📅<br><strong>View Events</strong>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ url_for('add_event') }}" class="btn w-100 py-3 text-white" style="background: #e74c3c;">
+                        ➕<br><strong>Add Event</strong>
+                    </a>
+                </div>
+            {% endif %}
         </div>
-        <div>
-            <h4 style="color: #2980b9; margin-bottom: 10px;">📊 Your Statistics</h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div style="text-align: center;">
-                    <div style="font-size: 14px; color: #666;">Families</div>
-                    <div style="font-size: 24px; font-weight: bold; color: #0b6;">{{ families_count }}</div>
-                </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 14px; color: #666;">Members</div>
-                    <div style="font-size: 24px; font-weight: bold; color: #3498db;">{{ members_count }}</div>
-                </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 14px; color: #666;">Events</div>
-                    <div style="font-size: 24px; font-weight: bold; color: #9b59b6;">{{ events_count }}</div>
-                </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 14px; color: #666;">Role</div>
-                    <div style="font-size: 24px; font-weight: bold; color: #e74c3c;">{{ session.role|title }}</div>
-                </div>
+    </div>
+</div>
+
+{% if session.role == 'admin' %}
+<div class="card border-0 shadow-sm mt-4">
+    <div class="card-body">
+        <h4 class="mb-3 text-danger">⚙️ Admin Tools</h4>
+        <div class="row g-2">
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="{{ url_for('manage_users') }}" class="btn w-100 btn-danger">👥 Manage Users</a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="{{ url_for('manage_villages') }}" class="btn w-100 btn-danger">🏘️ Manage Villages</a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="{{ url_for('families') }}" class="btn w-100 btn-success">🏠 All Families</a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="{{ url_for('view_members') }}" class="btn w-100 btn-primary">👥 All Members</a>
             </div>
         </div>
     </div>
 </div>
+{% endif %}
 
-<!-- Contact Admin Section for Non-Admins -->
 {% if session.role != 'admin' %}
-<div class="card" style="margin-top: 30px; background: #fff3cd; border-left: 4px solid #ffc107;">
-    <h3 style="color: #856404;">📞 Need to Make Changes?</h3>
-    <p style="margin: 0; color: #856404;">
-        <strong>Only administrators can add, edit, or delete families and members.</strong><br>
-        Please contact your system administrator if you need to make any changes to family or member data.
-    </p>
+<div class="alert alert-warning mt-4">
+    📞 <strong>Need to make changes?</strong><br>
+    Only administrators can edit or delete family/member data. Please contact your admin for updates.
 </div>
 {% endif %}
 
-<style>
-.btn {
-    display: block;
-    padding: 15px;
-    border-radius: 10px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border: none;
-    font-weight: 500;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.primary {
-    background: #0b6;
-    color: white;
-}
-
-.card {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    margin-top: 20px;
-    border: 1px solid #eaeaea;
-}
-
-@media (max-width: 768px) {
-    .dashboard-header h1 {
-        font-size: 24px;
-    }
-    
-    .card {
-        padding: 20px 15px;
-    }
-}
-</style>
 {% endblock %}

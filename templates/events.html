@@ -1,208 +1,87 @@
 {% extends 'base.html' %}
+{% block title %}Community Events{% endblock %}
 {% block content %}
-<div class="events-container">
-    <h3 class="events-title">📅 Community Events</h3>
-    
-    <div class="events-header">
-        <a href="{{ url_for('add_events') }}" class="btn add-event-btn">+ Add Event</a>
+
+<div class="container-fluid py-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-primary mb-3 mb-md-0">
+            📅 Community Events
+        </h3>
+        <a href="{{ url_for('add_events') }}" class="btn btn-success shadow-sm px-4">
+            + Add Event
+        </a>
     </div>
-    
-    <div class="table-container">
-        <table class="events-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Event Name</th>
-                    <th>Date</th>
-                    <th>Place</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for e in events %}
-                <tr class="event-row">
-                    <td class="event-number">{{ loop.index }}</td>
-                    <td class="event-name">{{ e.name }}</td>
-                    <td class="event-date">{{ e.date }}</td>
-                    <td class="event-place">{{ e.place }}</td>
-                    <td class="event-description">{{ e.description }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+    {% if events %}
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="text-white" style="background: linear-gradient(135deg, #007bff, #6610f2);">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Event Name</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Place</th>
+                        <th scope="col">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in events %}
+                    <tr class="fade-in">
+                        <td><strong>{{ loop.index }}</strong></td>
+                        <td class="fw-semibold text-dark">{{ e.name }}</td>
+                        <td>
+                            <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill">
+                                {{ e.date }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
+                                {{ e.place }}
+                            </span>
+                        </td>
+                        <td class="text-muted">{{ e.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+    {% else %}
+    <div class="alert alert-info text-center rounded-4 shadow-sm">
+        No events found. Click <strong>+ Add Event</strong> to create one.
+    </div>
+    {% endif %}
 </div>
 
 <style>
-/* Base Styles */
-.events-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 30px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
+/* Custom modern look */
+body {
+    background: #f8fafc;
 }
 
-/* Title Styling */
-.events-title {
-    text-align: center;
-    color: white;
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    letter-spacing: 1px;
-}
-
-/* Header Section */
-.events-header {
-    text-align: right;
-    margin-bottom: 30px;
-}
-
-/* Add Event Button */
-.add-event-btn {
-    background: linear-gradient(45deg, #00b09b, #96c93d);
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    display: inline-block;
-}
-
-.add-event-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(45deg, #00917a, #7db02e);
-    color: white;
-    text-decoration: none;
-}
-
-/* Table Container */
-.table-container {
-    background: white;
+/* Card & Table enhancements */
+.card {
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
 }
 
-/* Table Styling */
-.events-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0;
-}
-
-/* Table Header */
-.events-table thead {
-    background: linear-gradient(135deg, #2c3e50, #34495e);
-}
-
-.events-table th {
-    padding: 20px 15px;
-    text-align: center;
-    color: white;
-    font-weight: 600;
-    font-size: 16px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border: none;
-    position: relative;
-}
-
-.events-table th:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 20%;
-    height: 60%;
-    width: 1px;
-    background: rgba(255, 255, 255, 0.3);
-}
-
-/* Table Body */
-.events-table tbody tr {
-    transition: all 0.3s ease;
-    border-bottom: 1px solid #e8e8e8;
-}
-
-.events-table tbody tr:last-child {
-    border-bottom: none;
-}
-
-.events-table tbody tr:hover {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+/* Table row hover animation */
+.table-hover tbody tr:hover {
+    background-color: #f1f5ff;
     transform: scale(1.01);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
 }
 
-.events-table td {
-    padding: 18px 15px;
-    text-align: center;
-    border: none;
-    font-size: 15px;
-    color: #2c3e50;
-    vertical-align: middle;
+/* Smooth fade-in animation */
+.fade-in {
+    animation: fadeInUp 0.4s ease both;
 }
 
-/* Specific Column Styling */
-.event-number {
-    font-weight: 700;
-    color: #3498db;
-    font-size: 16px;
-    background: #f8f9fa;
-}
-
-.event-name {
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 16px;
-}
-
-.event-date {
-    color: #e74c3c;
-    font-weight: 500;
-    background: #fff5f5;
-    border-radius: 5px;
-    margin: 0 5px;
-}
-
-.event-place {
-    color: #27ae60;
-    font-weight: 500;
-    background: #f0fff4;
-    border-radius: 5px;
-    margin: 0 5px;
-}
-
-.event-description {
-    color: #7f8c8d;
-    max-width: 300px;
-    line-height: 1.5;
-    text-align: left;
-}
-
-/* Alternating Row Colors */
-.events-table tbody tr:nth-child(even) {
-    background: #f8f9fa;
-}
-
-.events-table tbody tr:nth-child(even):hover {
-    background: linear-gradient(135deg, #e9ecef, #dee2e6);
-}
-
-/* Animation for rows */
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(10px);
     }
     to {
         opacity: 1;
@@ -210,131 +89,38 @@
     }
 }
 
-.event-row {
-    animation: fadeInUp 0.5s ease forwards;
-}
-
-.event-row:nth-child(1) { animation-delay: 0.1s; }
-.event-row:nth-child(2) { animation-delay: 0.2s; }
-.event-row:nth-child(3) { animation-delay: 0.3s; }
-.event-row:nth-child(4) { animation-delay: 0.4s; }
-.event-row:nth-child(5) { animation-delay: 0.5s; }
-
-/* Responsive Design */
+/* Mobile responsiveness */
 @media (max-width: 768px) {
-    .events-container {
-        padding: 20px 15px;
+    h3 {
+        font-size: 1.5rem;
     }
-    
-    .events-title {
-        font-size: 2rem;
-        margin-bottom: 20px;
-    }
-    
-    .events-header {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    
-    .add-event-btn {
-        padding: 10px 20px;
-        font-size: 14px;
-    }
-    
-    .table-container {
+    .table-responsive {
         border-radius: 10px;
-        overflow-x: auto;
     }
-    
-    .events-table {
-        min-width: 600px;
+    .table thead {
+        font-size: 0.9rem;
     }
-    
-    .events-table th,
-    .events-table td {
-        padding: 12px 8px;
-        font-size: 14px;
+    .table td {
+        font-size: 0.85rem;
+        white-space: nowrap;
     }
-    
-    .events-table th {
-        font-size: 13px;
-        padding: 15px 8px;
+    .btn {
+        width: 100%;
     }
 }
 
+/* Tiny devices */
 @media (max-width: 480px) {
-    .events-container {
-        padding: 15px 10px;
+    .container-fluid {
+        padding: 10px;
     }
-    
-    .events-title {
-        font-size: 1.75rem;
+    .table td, .table th {
+        padding: 10px 8px;
     }
-    
-    .events-table th,
-    .events-table td {
-        padding: 10px 6px;
-        font-size: 13px;
-    }
-    
-    .event-description {
-        max-width: 200px;
-        font-size: 13px;
-    }
-}
-
-/* Scrollbar Styling for Table Container */
-.table-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-.table-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.table-container::-webkit-scrollbar-thumb {
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    border-radius: 4px;
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(45deg, #5a6fd8, #6a4190);
-}
-
-/* Loading Animation */
-.events-table tbody tr {
-    opacity: 0;
-    animation: fadeInUp 0.5s ease forwards;
-}
-
-/* Print Styles */
-@media print {
-    .events-container {
-        background: white !important;
-        padding: 0;
-    }
-    
-    .events-title {
-        color: black !important;
-        text-shadow: none !important;
-    }
-    
-    .events-header {
-        display: none;
-    }
-    
-    .table-container {
-        box-shadow: none !important;
-    }
-    
-    .events-table thead {
-        background: #f8f9fa !important;
-    }
-    
-    .events-table th {
-        color: black !important;
+    .text-muted {
+        font-size: 0.8rem;
     }
 }
 </style>
+
 {% endblock %}
