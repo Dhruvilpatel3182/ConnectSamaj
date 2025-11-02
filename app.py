@@ -13,13 +13,7 @@ app.secret_key = 'samaj-seva-secret-key-2024'
 def home():
     return redirect('/dashboard')
 
-@app.route('/ads.txt')
-def ads_txt():
-    return send_from_directory('static', 'ads.txt')
 
-@app.route('/robots.txt')  
-def robots_txt():
-    return send_from_directory('static', 'robots.txt')
 
 
 # ---------- CONFIG ----------
@@ -1392,6 +1386,20 @@ def user_events(village_name):
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+# Google Verification Routes - ADD THIS TO YOUR app.py
+@app.route('/ads.txt')
+def ads_txt():
+    return "google.com, pub-4575841956746799, DIRECT, f08c47fec0942fa0"
+
+@app.route('/robots.txt')
+def robots_txt():
+    return "User-agent: *\nAllow: /"
+
+# Add this if you use HTML file verification
+@app.route('/google*.html')
+def google_verification():
+    return "google-site-verification: google1234567890abcdef.html"
 
 # ---------- MAIN ----------
 if __name__ == '__main__':
