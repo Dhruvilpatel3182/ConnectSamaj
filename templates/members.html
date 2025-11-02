@@ -49,7 +49,7 @@
                     <th>Mobile</th>
                     <th>Education</th>
                     <th>Occupation</th>
-                    <th>Actions</th>
+                    <!-- <th>Actions</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -62,22 +62,22 @@
                         <div class="no-photo">No Photo</div>
                         {% endif %}
                     </td>
-                    <td><strong>{{ member[12] }}</strong></td>
-                    <td>{{ member[1] }}</td>
-                    <td>{{ member[2] }}</td>
-                    <td>{{ member[3] }}</td>
-                    <td>{{ member[4] or "-" }}</td>
-                    <td>{{ member[5] or "-" }}</td>
-                    <td>{{ member[6] or "-" }}</td>
-                    <td>{{ member[7] or "-" }}</td>
-                    <td>{{ member[10] or "-" }}</td>
-                    <td>{{ member[11] or "-" }}</td>
-                    <td>{{ member[8] or "-" }}</td>
-                    <td>{{ member[13] or "-" }}</td>
-                    <td>{{ member[14] or "-" }}</td>
-                    <td>
+                    <td><strong>{{ member[12] }}</strong></td>  <!-- Family No -->
+                    <td>{{ member[1] }}</td>  <!-- Member ID -->
+                    <td>{{ member[2] }}</td>  <!-- Name -->
+                    <td>{{ member[3] }}</td>  <!-- Father/Husband -->
+                    <td>{{ member[4] or "-" }}</td>  <!-- Gender -->
+                    <td>{{ member[5] or "-" }}</td>  <!-- Birthdate -->
+                    <td>{{ member[6] or "-" }}</td>  <!-- Age -->
+                    <td>{{ member[7] or "-" }}</td>  <!-- Birth Place -->
+                    <td>{{ member[10] or "-" }}</td>  <!-- Village -->
+                    <td>{{ member[11] or "-" }}</td>  <!-- Family Head -->
+                    <td>{{ member[8] or "-" }}</td>  <!-- Mobile -->
+                    <td>{{ member[13] or "-" }}</td>  <!-- Education -->
+                    <td>{{ member[14] or "-" }}</td>  <!-- Occupation -->
+                    <!-- <td>
                         <a href="{{ url_for('user_view_family', family_id=member[0]) }}" class="btn view-btn">View</a>
-                    </td>
+                    </td> -->
                 </tr>
                 {% endfor %}
             </tbody>
