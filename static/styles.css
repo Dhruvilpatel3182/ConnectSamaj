@@ -1,0 +1,30 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.table {
+  border: 2px solid #000;
+}
+
+.table th, .table td {
+  vertical-align: middle !important;
+}
+
+.head-photo, .member-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.head-photo-lg {
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  border: 3px solid #333;
+  object-fit: cover;
+}
+
+h2, h3 {
+  font-family: 'Noto Sans Gujarati', sans-serif;
+}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Families in {{ village_name }}</h2>
+
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Family No</th>
+                <th>Head of Family</th>
+                <th>Contact</th>
+                <th>Members</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for family in families %}
+            <tr>
+                <td><strong>F{{ "%03d"|format(family[1]) }}</strong></td>
+                <td>{{ family[2] }}</td>
+                <td>{{ family[4] or "-" }}</td>
+                <td>{{ family[5] }}</td>
+                <td>
+                    <a href="{{ url_for('delete_family', family_id=family[0]) }}" 
+                       class="btn" 
+                       style="background: #e74c3c; color: white;"
+                       onclick="return confirm('Delete family F{{ "%03d"|format(family[1]) }} and all members?')">
+                       Delete Family
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="actions" style="margin-top: 20px;">
+    <a href="{{ url_for('manage_villages') }}" class="btn">Back to Villages</a>
+</div>
+{% endblock %}

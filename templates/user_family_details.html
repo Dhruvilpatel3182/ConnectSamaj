@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="user-header" style="margin-bottom: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <div>
+            <h1>👨‍👩‍👧‍👦 Family Details</h1>
+            <p class="subtitle">F{{ "%03d"|format(family[1]) }} - {{ family[3] }}</p>
+        </div>
+        <div>
+            <a href="{{ url_for('user_families', village_name=family[3]) }}" class="btn">← Back to Families</a>
+            {% if session.role in ['admin', 'village_manager'] %}
+            <a href="{{ url_for('view_family', family_id=family[0]) }}" class="btn primary">Admin View</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="family-details" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+    <div class="family-info-card" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+        <h3 style="color: #0b6; margin-bottom: 20px;">Family Information</h3>
+        
+        <div style="display: grid; gap: 15px;">
+            <div>
+                <strong>👤 Head of Family:</strong><br>
+                <span style="font-size: 18px; color: #333;">{{ family[2] }}</span>
+            </div>
+            <div>
+                <strong>🏘️ Village:</strong><br>
+                <span style="color: #666;">{{ family[3] }}</span>
+            </div>
+            <div>
+                <strong>📞 Contact:</strong><br>
+                <span style="color: #666;">{{ family[4] or "Not provided" }}</span>
+            </div>
+            <div>
+                <strong>🏠 Address:</strong><br>
+                <span style="color: #666;">{{ family[5] or "Not provided" }}</span>
+            </div>
+            <div>
+                <strong>🔢 Family Number:</strong><br>
+                <span style="color: #666;">F{{ "%03d"|format(family[1]) }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="members-card" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+        <h3 style="color: #0b6; margin-bottom: 20px;">Family Members ({{ members|length }})</h3>
+        
+        {% if members %}
+        <div style="max-height: 400px; overflow-y: auto;">
+            {% for member in members %}
+            <div class="member-item" style="padding: 15px; border-bottom: 1px solid #eee; {% if not loop.last %}margin-bottom: 10px;{% endif %}">
+                <div style="display: flex; justify-content: between; align-items: start;">
+                    <div style="flex: 1;">
+                        <strong>{{ member[1] }}</strong>
+                        <div style="font-size: 12px; color: #666;">
+                            {{ member[2] }} • {{ member[3] or "" }} • {{ member[4] or "" }} years
+                        </div>
+                        {% if member[5] %}
+                        <div style="font-size: 12px; color: #888;">
+                            Education: {{ member[5] }}
+                        </div>
+                        {% endif %}
+                        {% if member[6] %}
+                        <div style="font-size: 12px; color: #888;">
+                            Occupation: {{ member[6] }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="background: #0b6; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px;">
+                            {{ member[7] or "Member" }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 30px; color: #666;">
+            <div style="font-size: 48px; margin-bottom: 10px;">👤</div>
+            <p>No members added to this family yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="action-buttons" style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+    <a href="{{ url_for('user_families', village_name=family[3]) }}" class="btn">← Back to Families</a>
+    <a href="{{ url_for('user_villages') }}" class="btn">All Villages</a>
+    {% if session.role in ['admin', 'village_manager'] %}
+    <a href="{{ url_for('add_member') }}" class="btn primary">Add Member</a>
+    <a href="{{ url_for('families') }}" class="btn primary">Admin Panel</a>
+    {% endif %}
+</div>
+{% endblock %}

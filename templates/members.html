@@ -1,0 +1,482 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="members-container">
+    <h2 class="page-title">Members / સભ્યો</h2>
+
+    <div class="filters">
+        <form method="GET" class="filter-form">
+            <div class="form-group">
+                <label for="village">Filter by Village / ગામ દ્વારા ફિલ્ટર કરો:</label>
+                <select name="village" id="village" onchange="this.form.submit()">
+                    <option value="">All Villages / બધા ગામ</option>
+                    {% for village in villages %}
+                    <option value="{{ village }}" {% if village == selected_village %}selected{% endif %}>
+                        {{ village }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="search">Search / શોધો:</label>
+                <div class="search-container">
+                    <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Name, Father Name, Mobile...">
+                    <button type="submit" class="search-btn">Search / શોધો</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if members %}
+    <div class="table-container">
+        <table class="members-table">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Family No</th>
+                    <th>Member ID</th>
+                    <th>Name / નામ</th>
+                    <th>Father/Husband / પિતા/પતિ</th>
+                    <th>Gender / લિંગ</th>
+                    <th>Birthdate / જન્મતારીખ</th>
+                    <th>Age / ઉંમર</th>
+                    <th>Birth Place / જન્મસ્થળ</th>
+                    <th>Village / ગામ</th>
+                    <th>Family Head</th>
+                    <th>Mobile</th>
+                    <th>Education / શિક્ષણ</th>
+                    <th>Occupation / વ્યવસાય</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr class="member-row">
+                    <!-- Photo -->
+                    <td class="photo-cell">
+                        {% if member[9] %}
+                            <img src="{{ url_for('uploaded_file', filename=member[9]) }}" alt="Photo" class="member-photo">
+                        {% else %}
+                            <div class="no-photo">
+                                <span>No Photo</span>
+                            </div>
+                        {% endif %}
+                    </td>
+                    
+                    <!-- Family No -->
+                    <td class="family-no"><strong>{{ member[12] }}</strong></td>
+                    
+                    <!-- Member ID -->
+                    <td class="member-id">{{ member[1] }}</td>
+                    
+                    <!-- Name -->
+                    <td class="member-name">{{ member[2] }}</td>
+                    
+                    <!-- Father/Husband Name -->
+                    <td class="father-name">{{ member[3] }}</td>
+                    
+                    <!-- Gender -->
+                    <td class="gender">{{ member[4] or "-" }}</td>
+                    
+                    <!-- Birthdate -->
+                    <td class="birthdate">{{ member[5] or "-" }}</td>
+                    
+                    <!-- Age -->
+                    <td class="age">{{ member[6] or "-" }}</td>
+                    
+                    <!-- Birth Place -->
+                    <td class="birth-place">{{ member[7] or "-" }}</td>
+                    
+                    <!-- Village -->
+                    <td class="village">{{ member[10] or "-" }}</td>
+                    
+                    <!-- Family Head -->
+                    <td class="family-head">{{ member[11] or "-" }}</td>
+                    
+                    <!-- Mobile -->
+                    <td class="mobile">{{ member[8] or "-" }}</td>
+                    
+                    <!-- Education -->
+                    <td class="education">{{ member[13] or "-" }}</td>
+                    
+                    <!-- Occupation -->
+                    <td class="occupation">{{ member[14] or "-" }}</td>
+                    
+                    <td class="actions-cell">
+                        <a href="{{ url_for('user_view_family', family_id=member[0]) }}" class="btn small view-family-btn">View Family</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-data">
+        <div class="no-data-icon">👥</div>
+        <p class="no-data-message">No members found.</p>
+        {% if session.role in ['admin', 'village_manager'] %}
+        <a href="{{ url_for('add_member') }}" class="btn primary add-first-btn">Add First Member</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if session.role in ['admin', 'village_manager'] %}
+    <div class="actions">
+        <a href="{{ url_for('add_member') }}" class="btn primary add-member-btn">Add Member / સભ્ય ઉમેરો</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+/* Base Styles */
+.members-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-title {
+    color: #2c3e50;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+/* Filters Section */
+.filters {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.filter-form {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    align-items: end;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 250px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.form-group select,
+.form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+}
+
+.search-container input {
+    flex: 1;
+}
+
+.search-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s ease;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    background: #2980b9;
+}
+
+/* Table Styles */
+.table-container {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+    overflow-x: auto;
+}
+
+.members-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1200px;
+}
+
+.members-table thead {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.members-table th {
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: white;
+    font-size: 14px;
+    border: none;
+}
+
+.members-table td {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+.members-table tbody tr {
+    transition: background 0.3s ease;
+}
+
+.members-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.members-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Member Photo */
+.photo-cell {
+    text-align: center;
+}
+
+.member-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid #e9ecef;
+}
+
+.no-photo {
+    width: 50px;
+    height: 50px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 12px;
+    border: 2px dashed #dee2e6;
+}
+
+/* Special Cells */
+.family-no {
+    font-weight: 600;
+    color: #27ae60;
+}
+
+.member-id {
+    font-weight: 500;
+    color: #3498db;
+}
+
+.member-name {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.father-name {
+    color: #34495e;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn.small {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn.primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn.primary:hover {
+    background: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.view-family-btn {
+    background: #95a5a6;
+    color: white;
+}
+
+.view-family-btn:hover {
+    background: #7f8c8d;
+}
+
+/* No Data State */
+.no-data {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.no-data-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.no-data-message {
+    color: #6c757d;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.add-first-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+/* Actions Section */
+.actions {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.add-member-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .members-container {
+        padding: 15px;
+    }
+    
+    .filter-form {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .form-group {
+        min-width: 100%;
+    }
+    
+    .search-container {
+        flex-direction: column;
+    }
+    
+    .page-title {
+        font-size: 24px;
+    }
+    
+    .members-table th,
+    .members-table td {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .members-container {
+        padding: 10px;
+    }
+    
+    .filters {
+        padding: 15px;
+    }
+    
+    .page-title {
+        font-size: 20px;
+    }
+    
+    .no-data {
+        padding: 40px 15px;
+    }
+}
+
+/* Animation for table rows */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.member-row {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Status badges for family head */
+.family-head {
+    font-weight: 500;
+}
+
+.family-head:contains("Yes") {
+    color: #27ae60;
+}
+
+.family-head:contains("No") {
+    color: #e74c3c;
+}
+
+/* Scrollbar styling for table container */
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+</style>
+{% endblock %}

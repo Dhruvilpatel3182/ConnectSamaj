@@ -1,0 +1,65 @@
+<!-- templates/sidebar.html -->
+<div class="sidebar-sticky">
+    <div class="text-center mb-4">
+        <h4 class="text-primary">Samaj Seva</h4>
+        <p class="text-muted small">Welcome, {{ session.username }}</p>
+        <p class="badge bg-secondary">{{ session.role|title }}</p>
+        {% if session.village %}
+        <p class="text-muted small">Village: {{ session.village }}</p>
+        {% endif %}
+    </div>
+    
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">
+                📊 Dashboard
+            </a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint in ['families', 'add_family', 'view_family'] %}active{% endif %}" href="{{ url_for('families') }}">
+                👨‍👩‍👧‍👦 Families
+            </a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint in ['view_members', 'add_member'] %}active{% endif %}" href="{{ url_for('view_members') }}">
+                👥 Members
+            </a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint in ['view_events', 'add_event'] %}active{% endif %}" href="{{ url_for('view_events') }}">
+                📅 Events
+            </a>
+        </li>
+        
+        {% if session.role == 'admin' %}
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'manage_users' %}active{% endif %}" href="{{ url_for('manage_users') }}">
+                ⚙️ Manage Users
+            </a>
+        </li>
+        
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'manage_villages' %}active{% endif %}" href="{{ url_for('manage_villages') }}">
+                🏘️ Manage Villages
+            </a>
+        </li>
+        {% endif %}
+        
+        {% if session.role in ['admin', 'village_manager'] %}
+        <li class="nav-item">
+            <a class="nav-link {% if request.endpoint in ['user_villages', 'user_families', 'user_view_family', 'user_events'] %}active{% endif %}" href="{{ url_for('user_villages') }}">
+                🏡 View Villages
+            </a>
+        </li>
+        {% endif %}
+        
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}">
+                🚪 Logout
+            </a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center mt-5">
+  <h1 class="mb-4">👪 Family Management System</h1>
+  <p class="lead">Manage families, members, and community events easily</p>
+  <div class="mt-4">
+    <a href="{{ url_for('families') }}" class="btn btn-primary btn-lg mx-2">View Families</a>
+    <a href="{{ url_for('add_family') }}" class="btn btn-success btn-lg mx-2">Add Family</a>
+    <a href="{{ url_for('events') }}" class="btn btn-info btn-lg mx-2">Events</a>
+  </div>
+</div>
+{% endblock %}

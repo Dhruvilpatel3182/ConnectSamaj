@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="events-container">
+    <h3 class="events-title">📅 Community Events</h3>
+    
+    <div class="events-header">
+        <a href="{{ url_for('add_events') }}" class="btn add-event-btn">+ Add Event</a>
+    </div>
+    
+    <div class="table-container">
+        <table class="events-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Event Name</th>
+                    <th>Date</th>
+                    <th>Place</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in events %}
+                <tr class="event-row">
+                    <td class="event-number">{{ loop.index }}</td>
+                    <td class="event-name">{{ e.name }}</td>
+                    <td class="event-date">{{ e.date }}</td>
+                    <td class="event-place">{{ e.place }}</td>
+                    <td class="event-description">{{ e.description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+/* Base Styles */
+.events-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+/* Title Styling */
+.events-title {
+    text-align: center;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    letter-spacing: 1px;
+}
+
+/* Header Section */
+.events-header {
+    text-align: right;
+    margin-bottom: 30px;
+}
+
+/* Add Event Button */
+.add-event-btn {
+    background: linear-gradient(45deg, #00b09b, #96c93d);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+}
+
+.add-event-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(45deg, #00917a, #7db02e);
+    color: white;
+    text-decoration: none;
+}
+
+/* Table Container */
+.table-container {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+/* Table Styling */
+.events-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+/* Table Header */
+.events-table thead {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+}
+
+.events-table th {
+    padding: 20px 15px;
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    position: relative;
+}
+
+.events-table th:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Table Body */
+.events-table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.events-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.events-table tbody tr:hover {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    transform: scale(1.01);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.events-table td {
+    padding: 18px 15px;
+    text-align: center;
+    border: none;
+    font-size: 15px;
+    color: #2c3e50;
+    vertical-align: middle;
+}
+
+/* Specific Column Styling */
+.event-number {
+    font-weight: 700;
+    color: #3498db;
+    font-size: 16px;
+    background: #f8f9fa;
+}
+
+.event-name {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.event-date {
+    color: #e74c3c;
+    font-weight: 500;
+    background: #fff5f5;
+    border-radius: 5px;
+    margin: 0 5px;
+}
+
+.event-place {
+    color: #27ae60;
+    font-weight: 500;
+    background: #f0fff4;
+    border-radius: 5px;
+    margin: 0 5px;
+}
+
+.event-description {
+    color: #7f8c8d;
+    max-width: 300px;
+    line-height: 1.5;
+    text-align: left;
+}
+
+/* Alternating Row Colors */
+.events-table tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.events-table tbody tr:nth-child(even):hover {
+    background: linear-gradient(135deg, #e9ecef, #dee2e6);
+}
+
+/* Animation for rows */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.event-row {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.event-row:nth-child(1) { animation-delay: 0.1s; }
+.event-row:nth-child(2) { animation-delay: 0.2s; }
+.event-row:nth-child(3) { animation-delay: 0.3s; }
+.event-row:nth-child(4) { animation-delay: 0.4s; }
+.event-row:nth-child(5) { animation-delay: 0.5s; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .events-container {
+        padding: 20px 15px;
+    }
+    
+    .events-title {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+    
+    .events-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .add-event-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .table-container {
+        border-radius: 10px;
+        overflow-x: auto;
+    }
+    
+    .events-table {
+        min-width: 600px;
+    }
+    
+    .events-table th,
+    .events-table td {
+        padding: 12px 8px;
+        font-size: 14px;
+    }
+    
+    .events-table th {
+        font-size: 13px;
+        padding: 15px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .events-container {
+        padding: 15px 10px;
+    }
+    
+    .events-title {
+        font-size: 1.75rem;
+    }
+    
+    .events-table th,
+    .events-table td {
+        padding: 10px 6px;
+        font-size: 13px;
+    }
+    
+    .event-description {
+        max-width: 200px;
+        font-size: 13px;
+    }
+}
+
+/* Scrollbar Styling for Table Container */
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #5a6fd8, #6a4190);
+}
+
+/* Loading Animation */
+.events-table tbody tr {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Print Styles */
+@media print {
+    .events-container {
+        background: white !important;
+        padding: 0;
+    }
+    
+    .events-title {
+        color: black !important;
+        text-shadow: none !important;
+    }
+    
+    .events-header {
+        display: none;
+    }
+    
+    .table-container {
+        box-shadow: none !important;
+    }
+    
+    .events-table thead {
+        background: #f8f9fa !important;
+    }
+    
+    .events-table th {
+        color: black !important;
+    }
+}
+</style>
+{% endblock %}

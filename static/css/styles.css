@@ -1,0 +1,55 @@
+body {
+  font-family: "Noto Sans Gujarati", "Segoe UI", sans-serif;
+  background: #f4f8fb;
+  color: #222;
+  margin: 0;
+}
+
+.container { max-width: 1100px; margin: auto; padding: 20px; }
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+h2, h3 { color: #034; margin-bottom: 10px; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+.table th {
+  background: #0b6;
+  color: white;
+}
+
+.btn {
+  background: #0b6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.btn:hover { background: #099; }
+
+.family-photo, .member-photo {
+  border-radius: 6px;
+  object-fit: cover;
+}
+.family-photo { width: 120px; height: 120px; border: 2px solid #0a6; }
+.member-photo { width: 80px; height: 80px; border: 1px solid #aaa; }
+
+.family-link {
+  color: #056;
+  text-decoration: none;
+}
+.family-link:hover { color: #0a6; text-decoration: underline; }

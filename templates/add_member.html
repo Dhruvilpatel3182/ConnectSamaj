@@ -1,0 +1,270 @@
+<!-- templates/add_member.html -->
+{% extends "base.html" %}
+
+{% block title %}Add Member - Samaj Seva{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Add Member / સભ્ય ઉમેરો</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('view_members') }}" class="btn btn-sm btn-secondary">
+            Back / પાછા
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Member Information / સભ્યની માહિતી</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <!-- Family Selection -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="family_id" class="form-label">Select Family / કુટુંબ પસંદ કરો <span class="text-danger">*</span></label>
+                            <select class="form-select" id="family_id" name="family_id" required>
+                                <option value="">Select Family / કુટુંબ પસંદ કરો</option>
+                                {% for family in families %}
+                                    <option value="{{ family[0] }}">
+                                        {{ family[1] }} - {{ family[2] }} ({{ family[3] }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="father_husband_name" class="form-label">Father/Husband Name / પિતા/પતિનું નામ</label>
+                            <input type="text" class="form-control" id="father_husband_name" name="father_husband_name" 
+                                   placeholder="Enter father/husband name">
+                        </div>
+                    </div>
+
+                    <!-- Basic Information -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Member Name / સભ્યનું નામ <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" required 
+                                   placeholder="Enter member name">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="gender" class="form-label">Gender / લિંગ <span class="text-danger">*</span></label>
+                            <select class="form-select" id="gender" name="gender" required>
+                                <option value="">Select / પસંદ કરો</option>
+                                <option value="Male">Male / પુરુષ</option>
+                                <option value="Female">Female / સ્ત્રી</option>
+                                <option value="Other">Other / અન્ય</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Birth Information -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="birthdate" class="form-label">Birth Date / જન્મતારીખ</label>
+                            <input type="date" class="form-control" id="birthdate" name="birthdate">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="age" class="form-label">Age / ઉંમર</label>
+                            <input type="number" class="form-control" id="age" name="age" 
+                                   placeholder="Enter age" min="0" max="120">
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="mobile" class="form-label">Mobile Number / મોબાઇલ નંબર</label>
+                            <div class="input-group">
+                                <span class="input-group-text">+91</span>
+                                <input type="tel" class="form-control" id="mobile" name="mobile" 
+                                       placeholder="XXXXXXXXXX" pattern="[0-9]{10}">
+                            </div>
+                            <div class="form-text">10-digit mobile number without +91</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="birth_place" class="form-label">Birth Place / જન્મસ્થળ</label>
+                            <input type="text" class="form-control" id="birth_place" name="birth_place" 
+                                   placeholder="Enter birth place">
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label for="address" class="form-label">Address / સરનામું</label>
+                            <textarea class="form-control" id="address" name="address" rows="2" 
+                                      placeholder="Enter address"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Education & Occupation -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="education" class="form-label">Education / શિક્ષણ</label>
+                            <select class="form-select" id="education" name="education">
+                                <option value="">Select / પસંદ કરો</option>
+                                <option value="Illiterate">Illiterate / નિરક્ષર</option>
+                                <option value="Primary">Primary School / પ્રાથમિક શાળા</option>
+                                <option value="Secondary">Secondary School / માધ્યમિક શાળા</option>
+                                <option value="High School">High School / હાઈસ્કૂલ</option>
+                                <option value="Diploma">Diploma / ડિપ્લોમા</option>
+                                <option value="Graduate">Graduate / સ્નાતક</option>
+                                <option value="Post Graduate">Post Graduate / સ્નાતકોત્તર</option>
+                                <option value="PhD">PhD / ડોક્ટરેટ</option>
+                                <option value="Other">Other / અન્ય</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="occupation" class="form-label">Occupation / વ્યવસાય</label>
+                            <input type="text" class="form-control" id="occupation" name="occupation" 
+                                   placeholder="Enter occupation">
+                        </div>
+                    </div>
+
+                    <!-- Relation & Photo -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="relation" class="form-label">Relation to Head / મુખ્ય સાથે સંબંધ</label>
+                            <input type="text" class="form-control" id="relation" name="relation" 
+                                   placeholder="e.g., Son, Wife, Daughter">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="photo" class="form-label">Photo / ફોટો</label>
+                            <input type="file" class="form-control" id="photo" name="photo" 
+                                   accept="image/*" onchange="previewImage(this)">
+                            <div class="form-text">Supported: JPG, PNG, GIF (Max: 16MB)</div>
+                        </div>
+                    </div>
+
+                    <!-- Remark -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <label for="remark" class="form-label">Remark / નોંધ</label>
+                            <textarea class="form-control" id="remark" name="remark" rows="2" 
+                                      placeholder="Enter any remarks"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Image Preview -->
+                    <div class="row mb-3" id="imagePreviewContainer" style="display: none;">
+                        <div class="col-12">
+                            <label class="form-label">Photo Preview / ફોટો પૂર્વદર્શન:</label>
+                            <div>
+                                <img id="imagePreview" src="#" alt="Preview" 
+                                     class="img-thumbnail" style="max-height: 200px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            Add Member / સભ્ય ઉમેરો
+                        </button>
+                        <a href="{{ url_for('view_members') }}" class="btn btn-secondary">
+                            Back / પાછા
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member ID Information Card -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">Member ID Information / સભ્ય ID માહિતી</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h6 class="alert-heading">Automatic Member ID Generation / સ્વચાલિત સભ્ય ID જનરેશન</h6>
+                    <p class="mb-2">Member IDs are automatically generated within each family (1, 2, 3, etc.).</p>
+                    <p class="mb-0">Each new member in a family gets the next sequential number.</p>
+                    
+                    <hr>
+                    
+                    <p class="mb-2">સભ્ય ID દરેક કુટુંબમાં સ્વચાલિત રીતે જનરેટ થાય છે (1, 2, 3, વગેરે).</p>
+                    <p class="mb-0">કુટુંબમાં દરેક નવા સભ્યને આગળનો ક્રમિક નંબર મળે છે.</p>
+                </div>
+                
+                <div class="mt-3">
+                    <h6>Example / ઉદાહરણ:</h6>
+                    <ul class="list-unstyled small">
+                        <li>• Family 001: Member ID 1, 2, 3...</li>
+                        <li>• Family 002: Member ID 1, 2, 3...</li>
+                        <li>• કુટુંબ 001: સભ્ય ID 1, 2, 3...</li>
+                        <li>• કુટુંબ 002: સભ્ય ID 1, 2, 3...</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions Card -->
+        <div class="card mt-3">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="card-title mb-0">Instructions / સૂચનાઓ</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled small">
+                    <li class="mb-2">✅ Fields marked with * are required</li>
+                    <li class="mb-2">✅ Select family first to generate member ID</li>
+                    <li class="mb-2">✅ Age will be calculated automatically if birthdate is provided</li>
+                    
+                    <li class="mb-2">✅ * ચિહ્નિત ફીલ્ડ્સ જરૂરી છે</li>
+                    <li class="mb-2">✅ સભ્ય ID જનરેટ કરવા માટે પહેલા કુટુંબ પસંદ કરો</li>
+                    <li class="mb-0">✅ જન્મતારીખ આપવામાં આવે તો ઉંમર સ્વચાલિત ગણવામાં આવશે</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function previewImage(input) {
+        const preview = document.getElementById('imagePreview');
+        const container = document.getElementById('imagePreviewContainer');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                container.style.display = 'block';
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            container.style.display = 'none';
+        }
+    }
+
+    // Auto-calculate age when birthdate changes
+    document.getElementById('birthdate').addEventListener('change', function() {
+        const birthdate = new Date(this.value);
+        const today = new Date();
+        let age = today.getFullYear() - birthdate.getFullYear();
+        const monthDiff = today.getMonth() - birthdate.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
+            age--;
+        }
+        
+        if (age >= 0 && age <= 120) {
+            document.getElementById('age').value = age;
+        }
+    });
+
+    // Set maximum date for birthdate to today
+    document.getElementById('birthdate').max = new Date().toISOString().split('T')[0];
+
+    // Mobile number validation
+    document.getElementById('mobile').addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+    });
+</script>
+{% endblock %}
