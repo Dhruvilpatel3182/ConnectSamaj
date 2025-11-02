@@ -15,7 +15,11 @@ def home():
 
 @app.route('/ads.txt')
 def ads_txt():
-    return send_from_directory('.', 'ads.txt')
+    return send_from_directory('static', 'ads.txt')
+
+@app.route('/robots.txt')  
+def robots_txt():
+    return send_from_directory('static', 'robots.txt')
 
 
 # ---------- CONFIG ----------
