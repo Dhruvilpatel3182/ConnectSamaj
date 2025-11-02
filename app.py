@@ -1388,13 +1388,14 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 # Google Verification Routes - ADD THIS TO YOUR app.py
+# CHANGE this in your app.py
 @app.route('/ads.txt')
 def ads_txt():
-    return "google.com, pub-4575841956746799, DIRECT, f08c47fec0942fa0"
+    return send_from_directory('static', 'ads.txt')
 
 @app.route('/robots.txt')
 def robots_txt():
-    return "User-agent: *\nAllow: /"
+    return send_from_directory('static', 'robots.txt')
 
 # Add this if you use HTML file verification
 @app.route('/google*.html')
