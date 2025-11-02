@@ -874,49 +874,7 @@ def view_members():
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     
-    query = '''SELECT m.id, m.unique_id, m.name, m.father_husband_name, m.gender, 
-                      f.village, f.head_name, f.family_no
-               FROM members m
-               JOIN families f ON m.family_id = f.id'''
-    
-    where_conditions = []
-    params = []
-    
-    if village_filter:
-        where_conditions.append("f.village = ?")
-        params.append(village_filter)
-    
-    if search_query:
-        where_conditions.append("(m.name LIKE ? OR m.father_husband_name LIKE ?)")
-        params.extend([f'%{search_query}%', f'%{search_query}%'])
-    
-    # NO village restrictions for any logged-in users
-    
-    if where_conditions:
-        query += " WHERE " + " AND ".join(where_conditions)
-    
-    query += " ORDER BY f.family_no, m.unique_id"
-    
-    c.execute(query, params)
-    members = c.fetchall()
-    
-    # Get villages for filter - ALL users can see all villages
-    c.execute("SELECT name FROM villages ORDER BY name")
-    villages = [row[0] for row in c.fetchall()]
-    conn.close()
-    
-    return render_template('members.html', 
-                         members=members, 
-                         villages=villages,
-                         selected_village=village_filter,
-                         search_query=search_query)
-    village_filter = request.args.get('village', '')
-    search_query = request.args.get('search', '')
-    
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    
-    # UPDATED query with all columns including birthdate, age, birth_place, photo
+    # UPDATED query with all columns
     query = '''SELECT m.id, m.unique_id, m.name, m.father_husband_name, m.gender, 
                       m.birthdate, m.age, m.birth_place, m.mobile, m.photo,
                       f.village, f.head_name, f.family_no, m.education, m.occupation
@@ -934,11 +892,6 @@ def view_members():
         where_conditions.append("(m.name LIKE ? OR m.father_husband_name LIKE ? OR m.mobile LIKE ? OR m.birth_place LIKE ?)")
         params.extend([f'%{search_query}%', f'%{search_query}%', f'%{search_query}%', f'%{search_query}%'])
     
-    # Restrict village managers to their village
-    if session['role'] == 'village_manager':
-        where_conditions.append("f.village = ?")
-        params.append(session['village'])
-    
     if where_conditions:
         query += " WHERE " + " AND ".join(where_conditions)
     
@@ -947,12 +900,13 @@ def view_members():
     c.execute(query, params)
     members = c.fetchall()
     
-    # Get villages for filter
-    if session['role'] == 'admin':
-        c.execute("SELECT name FROM villages ORDER BY name")
-    else:
-        c.execute("SELECT name FROM villages WHERE name = ?", (session['village'],))
+    # Debug: Check if we're getting data
+    print(f"DEBUG: Found {len(members)} members")
+    if members:
+        print(f"DEBUG: First member: {members[0]}")
     
+    # Get villages for filter
+    c.execute("SELECT name FROM villages ORDER BY name")
     villages = [row[0] for row in c.fetchall()]
     conn.close()
     
@@ -961,7 +915,6 @@ def view_members():
                          villages=villages,
                          selected_village=village_filter,
                          search_query=search_query)
-
 # ---------- EVENT MANAGEMENT ----------
 @app.route('/events')
 @login_required
