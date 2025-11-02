@@ -9,6 +9,11 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 app.secret_key = 'samaj-seva-secret-key-2024'
 
+@app.route('/')
+def home():
+    return redirect('/dashboard')
+
+
 # ---------- CONFIG ----------
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
